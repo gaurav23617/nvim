@@ -19,11 +19,11 @@ return {
 					{ "filetype" },
 				},
 
-				lualine_a = {
-					{
-						"buffers",
-					},
-				},
+				-- lualine_a = {
+				-- 	{
+				-- 		"buffers",
+				-- 	},
+				-- },
 			},
 		})
 	end,
