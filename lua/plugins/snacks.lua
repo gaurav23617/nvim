@@ -87,6 +87,9 @@ return {
 		notifier = {
 			enabled = true,
 		},
+		notify = {
+			enabled = true,
+		},
 		quickfile = {
 			enabled = true,
 		},

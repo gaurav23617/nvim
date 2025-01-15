@@ -1,6 +1,9 @@
 return {
 	"nvim-lualine/lualine.nvim",
 	event = "VeryLazy",
+	dependencies = {
+		{ "folke/noice.nvim", opts = {} }, -- Noice plugin for enhancing the command line UI
+	},
 	init = function()
 		vim.g.lualine_laststatus = vim.o.laststatus
 		if vim.fn.argc(-1) > 0 then
@@ -15,22 +18,14 @@ return {
 		local lualine = require("lualine")
 		local lazy_status = require("lazy.status") -- to configure lazy pending updates count
 
-		-- Custom function to show command line content
-		local function cmdline_content()
-			if vim.fn.mode() == "c" then -- Check if in command-line mode
-				return ":" .. vim.fn.getcmdline() -- Get and display current command
-			end
-			return "" -- Return empty when not in command-line mode
-		end
-
-		-- configure lualine with command line integration
+		-- configure lualine with command-line integration via noice.nvim
 		lualine.setup({
 			options = {
 				icons_enabled = true,
 				theme = "auto",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
-				disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
+				disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter" } },
 				globalstatus = true, -- Enables a global statusline
 			},
 			sections = {
@@ -43,7 +38,13 @@ return {
 						cond = lazy_status.has_updates,
 						color = { fg = "#ff9e64" },
 					},
-					cmdline_content, -- Add command-line content to lualine
+					{
+						"noice_command", -- Displays command line input handled by noice.nvim
+						cond = function()
+							return require("noice").api.status.command.has()
+						end,
+						color = { fg = "#00ffcc" },
+					},
 					{ "encoding" },
 					{ "fileformat" },
 					{ "filetype" },
