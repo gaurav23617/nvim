@@ -2,7 +2,7 @@ return {
 	"nvim-lualine/lualine.nvim",
 	event = "VeryLazy",
 	dependencies = {
-		{ "folke/noice.nvim", opts = {} }, -- Noice plugin for enhancing the command line UI
+		{ "folke/noice.nvim", opts = {} }, -- Noice plugin for enhancing the command-line UI
 	},
 	init = function()
 		vim.g.lualine_laststatus = vim.o.laststatus
@@ -17,12 +17,22 @@ return {
 	config = function()
 		local lualine = require("lualine")
 		local lazy_status = require("lazy.status") -- to configure lazy pending updates count
+		local noice = require("noice")
 
-		-- configure lualine with command-line integration via noice.nvim
+		-- Function to display macro recording status
+		local function macro_recording()
+			local recording_register = vim.fn.reg_recording()
+			if recording_register ~= "" then
+				return "Recording @" .. recording_register
+			end
+			return ""
+		end
+
+		-- configure lualine with command-line integration via noice.nvim and macro recording status
 		lualine.setup({
 			options = {
 				icons_enabled = true,
-				theme = "auto",
+				theme = "catppuccin",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter" } },
@@ -39,11 +49,20 @@ return {
 						color = { fg = "#ff9e64" },
 					},
 					{
-						"noice_command", -- Displays command line input handled by noice.nvim
-						cond = function()
-							return require("noice").api.status.command.has()
+						function()
+							return noice.api.status.command.get()
 						end,
-						color = { fg = "#00ffcc" },
+						cond = function()
+							return noice.api.status.command.has()
+						end,
+						color = { fg = "#cdd6f4" },
+					},
+					{
+						macro_recording, -- Displays macro recording status
+						cond = function()
+							return vim.fn.reg_recording() ~= ""
+						end,
+						color = { fg = "#ff0000" }, -- Highlight macro recording
 					},
 					{ "encoding" },
 					{ "fileformat" },
