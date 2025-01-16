@@ -44,11 +44,6 @@ return {
 				lualine_c = { { "filename", path = 1 } },
 				lualine_x = {
 					{
-						lazy_status.updates,
-						cond = lazy_status.has_updates,
-						color = { fg = "#ff9e64" },
-					},
-					{
 						function()
 							return noice.api.status.command.get()
 						end,
@@ -63,6 +58,11 @@ return {
 							return vim.fn.reg_recording() ~= ""
 						end,
 						color = { fg = "#ff0000" }, -- Highlight macro recording
+					},
+					{
+						lazy_status.updates,
+						cond = lazy_status.has_updates,
+						color = { fg = "#ff9e64" },
 					},
 					{ "encoding" },
 					{ "fileformat" },
