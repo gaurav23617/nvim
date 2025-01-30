@@ -72,6 +72,37 @@ return {
 			},
 		})
 
+		vim.api.nvim_create_autocmd("BufEnter", {
+			desc = "Open Neo-Tree on startup with directory",
+			callback = function()
+				if package.loaded["neo-tree"] then
+					return
+				else
+					local stats = (vim.uv or vim.loop).fs_stat(vim.api.nvim_buf_get_name(0))
+					if stats and stats.type == "directory" then
+						require("lazy").load({ plugins = { "neo-tree.nvim" } })
+						vim.cmd("Neotree reveal") -- Auto-reveal files
+					end
+				end
+			end,
+		})
+
+		vim.api.nvim_create_autocmd("TermClose", {
+			pattern = "*lazygit*",
+			desc = "Refresh Neo-Tree sources when closing lazygit",
+			callback = function()
+				local manager_avail, manager = pcall(require, "neo-tree.sources.manager")
+				if manager_avail then
+					for _, source in ipairs({ "filesystem", "git_status", "document_symbols" }) do
+						local module = "neo-tree.sources." .. source
+						if package.loaded[module] then
+							manager.refresh(require(module).name)
+						end
+					end
+				end
+			end,
+		})
+
 		-- Set keymaps
 		local keymap = vim.keymap -- for conciseness
 
@@ -80,5 +111,12 @@ return {
 		keymap.set("n", "<leader>ef", "<cmd>Neotree reveal<CR>", { desc = "Reveal file in file explorer" }) -- reveal current file
 		keymap.set("n", "<leader>ec", "<cmd>Neotree close<CR>", { desc = "Close file explorer" }) -- close file explorer
 		keymap.set("n", "<leader>er", "<cmd>Neotree refresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
+		keymap.set("n", "<Leader>o", function()
+			if vim.bo.filetype == "neo-tree" then
+				vim.cmd.wincmd("p")
+			else
+				vim.cmd.Neotree("focus")
+			end
+		end, { desc = "Toggle Explorer Focus" })
 	end,
 }
