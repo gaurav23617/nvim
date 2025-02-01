@@ -1,5 +1,3 @@
-
-
 <h1 align="center">
 creating my on neovim config
 </h1>
