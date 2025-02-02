@@ -1,17 +1,40 @@
 return {
 	"saghen/blink.cmp",
-	dependencies = { "rafamadriz/friendly-snippets" },
+	dependencies = {
+		"moyiz/blink-emoji.nvim",
+		"Kaiser-Yang/blink-cmp-dictionary",
+		"rafamadriz/friendly-snippets",
+		"folke/lazydev.nvim",
+		-- "mrcjkb/haskell-tools.nvim",
+		"hrsh7th/nvim-cmp",
+	},
 	version = "*",
 	event = { "InsertEnter" },
 	opts_extend = { "sources.default" },
 	config = function()
-		require("blink.cmp").setup({
+		-- Safe import of nvim-cmp
+		local cmp_ok, cmp = pcall(require, "cmp")
+		if not cmp_ok then
+			return
+		end
+
+		-- Safe import of blink-cmp
+		local blink_cmp_ok, blink_cmp = pcall(require, "blink.cmp")
+		if not blink_cmp_ok then
+			return
+		end
+
+		blink_cmp.setup({
 			-- 'default', 'super-tab', 'enter'
+
 			keymap = {
-				preset = "enter",
+				preset = "enter", -- ✨ Potential Issue Here
 				["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
 				["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+				["<C-J>"] = { "select_next", "snippet_forward", "fallback" },
+				["<C-K>"] = { "select_prev", "snippet_backward", "fallback" },
 			},
+
 			completion = {
 				list = {
 					selection = {
@@ -28,7 +51,6 @@ return {
 				use_nvim_cmp_as_default = true,
 				-- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
 				nerd_font_variant = "normal",
-				kind_icons = require("lib.icons").kind,
 			},
 			sources = {
 				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
