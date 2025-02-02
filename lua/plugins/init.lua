@@ -52,4 +52,22 @@ return {
 			reindent_linewise = true,
 		},
 	},
+	{
+		"iamcco/markdown-preview.nvim",
+		keys = {
+			{
+				"<leader>mp",
+				ft = "markdown",
+				"<cmd>MarkdownPreviewToggle<cr>",
+				desc = "Markdown Preview",
+			},
+		},
+	},
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+		---@module 'render-markdown'
+		---@type render.md.UserConfig
+		opts = {},
+	},
 }
