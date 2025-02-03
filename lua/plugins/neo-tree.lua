@@ -290,8 +290,8 @@ return {
 
 		-- Toggle each source
 		keymap.set("n", "<leader>e", "<cmd>Neotree toggle filesystem<CR>", { desc = "Toggle file explorer" })
-		keymap.set("n", "<leader>b", "<cmd>Neotree toggle buffers<CR>", { desc = "Toggle buffer explorer" })
-		keymap.set("n", "<leader>g", "<cmd>Neotree toggle git_status<CR>", { desc = "Toggle git explorer" })
+		keymap.set("n", "<leader>eb", "<cmd>Neotree toggle buffers<CR>", { desc = "Toggle buffer explorer" })
+		keymap.set("n", "<leader>eg", "<cmd>Neotree toggle git_status<CR>", { desc = "Toggle git explorer" })
 
 		keymap.set("i", "<C-B>", "<cmd>Neotree toggle filesystem<CR>", { desc = "Toggle file explorer (Insert)" })
 		keymap.set("n", "<leader>ef", "<cmd>Neotree reveal<CR>", { desc = "Reveal current file in explorer" })
