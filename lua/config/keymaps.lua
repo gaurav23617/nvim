@@ -1,42 +1,53 @@
-local keymap = vim.keymap -- for conciseness
+local function keymap(mode, keys, action, desc)
+	local opts = { noremap = true, silent = true, desc = desc or "" }
 
-keymap.set("i", "jj", "<ESC>", { desc = "Exit insert mode with jj" })
-keymap.set("i", "jk", "<ESC>:w<cr>", { desc = "Exit insert mode and save file with jk" })
+	vim.keymap.set(mode, keys, action, opts)
+end
 
-keymap.set("i", "<C-d>", "<ESC>:t.<CR>i", { desc = "Cpoy line down in insert mode" })
+-- Insert mode shortcuts
+keymap("i", "jj", "<ESC>", "Exit insert mode with jj")
+keymap("i", "jk", "<ESC>:w<CR>", "Exit insert mode and save file with jk")
+keymap("i", "<C-d>", "<ESC>:t.<CR>i", "Copy line down in insert mode")
 
-keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+-- Save File
+keymap("n", "<leader>w", "<ESC>:w<CR>", "Save file")
+keymap("n", "<leader>wq", "<ESC>:wq<CR>", "Save and exit file")
+keymap("n", "<leader>wqa", "<ESC>:wqa<CR>", "Save file and exit nvim")
 
--- Move to window using the <ctrl> hjkl keys
-keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+keymap("n", "<leader>q", ":q", "Exit file")
 
--- Resize window using <ctrl> arrow keys
-keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+-- Clear search highlighting
+keymap("n", "<Esc>", ":nohlsearch<CR>", "Clear search highlighting")
+keymap("n", "<leader>nh", ":nohl<CR>", "Clear search highlights")
 
--- increment/decrement numbers
-keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
-keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
+-- Move to window using <Ctrl> + hjkl
+keymap("n", "<C-h>", "<C-w>h", "Go to Left Window")
+keymap("n", "<C-j>", "<C-w>j", "Go to Lower Window")
+keymap("n", "<C-k>", "<C-w>k", "Go to Upper Window")
+keymap("n", "<C-l>", "<C-w>l", "Go to Right Window")
 
--- window management
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
-keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
+-- Resize windows using <Ctrl> + arrow keys
+keymap("n", "<C-Up>", "<cmd>resize +2<CR>", "Increase Window Height")
+keymap("n", "<C-Down>", "<cmd>resize -2<CR>", "Decrease Window Height")
+keymap("n", "<C-Left>", "<cmd>vertical resize -2<CR>", "Decrease Window Width")
+keymap("n", "<C-Right>", "<cmd>vertical resize +2<CR>", "Increase Window Width")
 
-keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
-keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
-keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
-keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
-keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+-- Increment/decrement numbers
+keymap("n", "<leader>+", "<C-a>", "Increment number")
+keymap("n", "<leader>-", "<C-x>", "Decrement number")
 
--- clear search highlighting
-keymap.set("n", "<Esc>", ":nohlsearch<cr>", { desc = "Clear search highlighting" })
+-- Window management
+keymap("n", "<leader>sv", "<C-w>v", "Split window vertically")
+keymap("n", "<leader>sh", "<C-w>s", "Split window horizontally")
+keymap("n", "<leader>se", "<C-w>=", "Make splits equal size")
+keymap("n", "<leader>sx", "<cmd>close<CR>", "Close current split")
 
--- save
-keymap.set("n", "<leader>ss", ":w<cr>", { desc = "Save file" })
+-- Tab management
+keymap("n", "<leader>to", "<cmd>tabnew<CR>", "Open new tab")
+keymap("n", "<leader>tx", "<cmd>tabclose<CR>", "Close current tab")
+keymap("n", "<leader>tn", "<cmd>tabn<CR>", "Go to next tab")
+keymap("n", "<leader>tp", "<cmd>tabp<CR>", "Go to previous tab")
+keymap("n", "<leader>tf", "<cmd>tabnew %<CR>", "Open current buffer in new tab")
+
+-- Save file
+keymap("n", "<leader>ss", ":w<CR>", "Save file")
