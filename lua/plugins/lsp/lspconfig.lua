@@ -85,6 +85,50 @@ return {
 					},
 				})
 			end,
+			["biome"] = function()
+				lspconfig.biome.setup({
+					capabilities = capabilities,
+					cmd = { "biome", "lsp-proxy" },
+					filetypes = { "javascript", "typescript", "json", "jsonc", "vue", "svelte", "css", "astro" },
+					root_dir = require("lspconfig.util").root_pattern("biome.json", "biome.jsonc", ".git"),
+					settings = {
+						biome = {
+							formatter = {
+								enabled = true,
+								indentStyle = "tab",
+								formatWithErrors = false,
+								lineWidth = 100,
+								lineEnding = "lf",
+							},
+							files = {
+								ignore = { "dist", "node_modules", ".git" },
+							},
+							organizeImports = {
+								enabled = true,
+							},
+							linter = {
+								enabled = true,
+								rules = {
+									recommended = true,
+									correctness = {
+										noUnsafeFinally = "error",
+										noUnusedVariables = "error",
+									},
+									suspicious = {
+										noDoubleEquals = "error",
+										useNamespaceKeyword = "error",
+									},
+								},
+							},
+						},
+					},
+				})
+			end,
+			["tailwindcss"] = function()
+				lspconfig.tailwindcss.setup({
+					capabilities = capabilities,
+				})
+			end,
 		})
 	end,
 }
