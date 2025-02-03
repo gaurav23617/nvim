@@ -51,13 +51,6 @@ return {
 			},
 		})
 
-		-- vim.api.nvim_set_keymap(
-		-- 	"n",
-		-- 	"<leader><Space>",
-		-- 	":lua require('telescope.builtin').find_files({ previewer = false })<CR>",
-		-- 	{ noremap = true, silent = true }
-		-- )
-		-- Load extensions
 		telescope.load_extension("fzf")
 
 		-- Key mappings
@@ -86,12 +79,6 @@ return {
 			"<leader>fF",
 			"<cmd>Telescope find_files hidden=true no_ignore=true<cr>",
 			{ desc = "Find all files" }
-		)
-		keymap.set(
-			"n",
-			"<leader>ft",
-			"<cmd>Telescope colorscheme enable_preview=true ignore_builtins=true<cr>",
-			{ desc = "Find themes" }
 		)
 	end,
 }

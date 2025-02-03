@@ -2,53 +2,32 @@ return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		"williamboman/mason-lspconfig.nvim",
-		"hrsh7th/cmp-nvim-lsp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local lspconfig = require("lspconfig")
-		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local mason_lspconfig = require("mason-lspconfig")
 		local keymap = vim.keymap
 
-		-- Handle missing blink.cmp
-		local blink_cmp
-		local blink_success, blink_module = pcall(require, "blink.cmp")
-		if blink_success then
-			blink_cmp = blink_module
-		else
-			blink_cmp = {
-				get_lsp_capabilities = function()
-					return {}
-				end,
-			}
-		end
+		local capabilities = vim.lsp.protocol.make_client_capabilities() -- No cmp-nvim-lsp
 
-		-- Define fallback icons
-		local icons = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
-
-		local installed_servers = {}
-
-		local capabilities = blink_cmp.get_lsp_capabilities and blink_cmp.get_lsp_capabilities() or {}
-
+		-- Define default setup for all LSP servers
 		local default_setup = function(server)
 			lspconfig[server].setup({
 				capabilities = capabilities,
 			})
 		end
 
-		local signs = { Error = icons.Error, Warn = icons.Warning, Hint = icons.Hint, Info = icons.Information }
-		for type, icon in pairs(signs) do
-			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-		end
-
+		-- Set up key bindings when an LSP attaches
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
-				local opts = { buffer = ev.buf, silent = true }
+				local opts = {
+					buffer = ev.buf,
+					silent = true,
+				}
 
 				opts.desc = "Show LSP references"
 				keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
@@ -93,9 +72,7 @@ return {
 
 		mason_lspconfig.setup_handlers({
 			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
+				default_setup(server_name)
 			end,
 			["lua_ls"] = function()
 				lspconfig["lua_ls"].setup({
