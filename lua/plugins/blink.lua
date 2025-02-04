@@ -25,8 +25,82 @@ return {
 				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 				["<C-e>"] = { "hide", "fallback" },
 			},
+			appearance = {
+				highlight_ns = vim.api.nvim_create_namespace("blink_cmp"),
+				nerd_font_variant = "mono",
+			},
+			completion = {
+				ghost_text = {
+					enabled = true,
+					-- Show the ghost text when an item has been selected
+					show_with_selection = true,
+					-- Show the ghost text when no item has been selected, defaulting to the first item
+					show_without_selection = false,
+				},
+				menu = {
+					enabled = true,
+					min_width = 15,
+					max_height = 10,
+					border = "none",
+					winblend = 0,
+					winhighlight = "Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
+					-- Keep the cursor X lines away from the top/bottom of the window
+					scrolloff = 2,
+					-- Note that the gutter will be disabled when border ~= 'none'
+					scrollbar = true,
+					-- Which directions to show the window,
+					-- falling back to the next direction when there's not enough space
+					direction_priority = { "s", "n" },
+
+					-- Whether to automatically show the window when new completion items are available
+					auto_show = true,
+
+					-- Screen coordinates of the command line
+					cmdline_position = function()
+						if vim.g.ui_cmdline_pos ~= nil then
+							local pos = vim.g.ui_cmdline_pos -- (1, 0)-indexed
+							return { pos[1] - 1, pos[2] }
+						end
+						local height = (vim.o.cmdheight == 0) and 1 or vim.o.cmdheight
+						return { vim.o.lines - height, 0 }
+					end,
+				},
+			},
+			signature = {
+				enabled = true,
+				trigger = {
+					-- Show the signature help automatically
+					enabled = true,
+					-- Show the signature help window after typing any of alphanumerics, `-` or `_`
+					show_on_keyword = false,
+					blocked_trigger_characters = {},
+					blocked_retrigger_characters = {},
+					-- Show the signature help window after typing a trigger character
+					show_on_trigger_character = true,
+					-- Show the signature help window when entering insert mode
+					show_on_insert = false,
+					-- Show the signature help window when the cursor comes after a trigger character when entering insert mode
+					show_on_insert_on_trigger_character = true,
+				},
+				window = {
+					min_width = 1,
+					max_width = 100,
+					max_height = 10,
+					border = "padded",
+					winblend = 0,
+					winhighlight = "Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder",
+					scrollbar = false, -- Note that the gutter will be disabled when border ~= 'none'
+					-- Which directions to show the window,
+					-- falling back to the next direction when there's not enough space,
+					-- or another window is in the way
+					direction_priority = { "n", "s" },
+					-- Disable if you run into performance issues
+					treesitter_highlighting = true,
+					show_documentation = true,
+				},
+			},
 			sources = {
-				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+				default = { "dictionary", "lazydev", "lsp", "path", "snippets", "buffer" },
 				providers = {
 					lsp = {
 						name = "LSP",
@@ -76,6 +150,13 @@ return {
 						enabled = true,
 						max_items = 8,
 						min_keyword_length = 3,
+						opts = {
+							dictionary_directories = { vim.fn.expand("../../dictionaries") },
+							dictionary_files = {
+								vim.fn.expand("../../spell/en.utf-8.add"),
+								vim.fn.expand("../../spell/es.utf-8.add"),
+							},
+						},
 					},
 				},
 			},

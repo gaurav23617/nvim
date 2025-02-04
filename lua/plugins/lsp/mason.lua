@@ -25,8 +25,8 @@ return {
 		})
 
 		mason_lspconfig.setup({
-			-- list of servers for mason to install
 			ensure_installed = {
+				"biome",
 				"ts_ls",
 				"html",
 				"cssls",

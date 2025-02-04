@@ -11,6 +11,7 @@ keymap("i", "<C-d>", "<ESC>:t.<CR>i", "Copy line down in insert mode")
 
 -- Save File
 keymap("n", "<leader>w", "<ESC>:w<CR>", "Save file")
+keymap("n", "<leader>ss", ":w<CR>", "Save file")
 keymap("n", "<leader>wq", "<ESC>:wq<CR>", "Save and exit file")
 keymap("n", "<leader>wqa", "<ESC>:wqa<CR>", "Save file and exit nvim")
 
@@ -49,5 +50,6 @@ keymap("n", "<leader>tn", "<cmd>tabn<CR>", "Go to next tab")
 keymap("n", "<leader>tp", "<cmd>tabp<CR>", "Go to previous tab")
 keymap("n", "<leader>tf", "<cmd>tabnew %<CR>", "Open current buffer in new tab")
 
--- Save file
-keymap("n", "<leader>ss", ":w<CR>", "Save file")
+keymap("n", "<leader>ll", "<cmd>Lazy<CR>", "Lazy")
+keymap("n", "<leader>li", "<cmd>Lazy install<CR>", "Lazy install")
+keymap("n", "<leader>lu", "<cmd>Lazy update<CR>", "Lazy update")
