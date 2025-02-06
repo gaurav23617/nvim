@@ -84,6 +84,7 @@ return {
 		input = {
 			enabled = false,
 		},
+		picker = { enabled = true },
 		notifier = {
 			enabled = true,
 		},

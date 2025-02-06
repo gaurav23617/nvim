@@ -3,81 +3,98 @@ return {
 	"christoomey/vim-tmux-navigator", -- tmux & split window navigation
 	{ "echasnovski/mini.animate", version = false },
 	{
+		"m4xshen/hardtime.nvim",
+		-- lazy = true,
+		dependencies = { "MunifTanjim/nui.nvim" },
+		opts = {},
+	},
+	{
 		"mg979/vim-visual-multi",
 		branch = "master",
 		init = function()
 			vim.g.VM_maps = {
-				["Find Under"] = "<C-d>",
+				["Find Under"] = "<C-S-d>",
 			}
 		end,
 	},
 	{
-		"nvzone/typr",
-		dependencies = "nvzone/volt",
-		opts = {},
-		cmd = { "Typr", "TyprStats" },
-	},
-	{ "nvzone/volt", lazy = true },
-	{
-		"nvzone/menu",
-		lazy = true,
+		"toppair/peek.nvim",
+		event = { "VeryLazy" },
+		build = "deno task --quiet build:fast",
 		config = function()
-			require("menu").open(options, opts)
-			-- Keyboard users
-			vim.keymap.set("n", "<C-t>", function()
-				require("menu").open("default")
-			end, {})
-
-			-- mouse users + nvimtree users!
-			vim.keymap.set({ "n", "v" }, "<RightMouse>", function()
-				require("menu.utils").delete_old_menus()
-
-				vim.cmd.exec('"normal! \\<RightMouse>"')
-
-				-- clicked buf
-				local buf = vim.api.nvim_win_get_buf(vim.fn.getmousepos().winid)
-				local options = vim.bo[buf].ft == "NvimTree" and "nvimtree" or "default"
-
-				require("menu").open(options, { mouse = true })
-			end, {})
+			require("peek").setup({
+				filetype = { "markdown", "conf" },
+			})
+			vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+			vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
 		end,
 	},
 	{
-		"nvzone/showkeys",
-		cmd = "ShowkeysToggle",
-		opts = {
-			timeout = 1,
-			maxkeys = 5,
-			-- more opts
-		},
+		"lewis6991/hover.nvim",
+		config = function()
+			require("hover").setup({
+				init = function()
+					-- Require providers
+					require("hover.providers.lsp")
+					require("hover.providers.gh")
+					require("hover.providers.gh_user")
+					require("hover.providers.fold_preview")
+					require("hover.providers.dictionary")
+				end,
+				preview_opts = {
+					border = "single",
+				},
+				preview_window = false,
+				title = true,
+				mouse_providers = {
+					"LSP",
+				},
+				mouse_delay = 1000,
+			})
+
+			-- Setup keymaps
+			vim.keymap.set("n", "K", require("hover").hover, { desc = "hover.nvim" })
+			vim.keymap.set("n", "gK", require("hover").hover_select, { desc = "hover.nvim (select)" })
+			vim.keymap.set("n", "<C-p>", function()
+				require("hover").hover_switch("previous")
+			end, { desc = "hover.nvim (previous source)" })
+			vim.keymap.set("n", "<C-n>", function()
+				require("hover").hover_switch("next")
+			end, { desc = "hover.nvim (next source)" })
+
+			-- Mouse support
+			vim.keymap.set("n", "<MouseMove>", require("hover").hover_mouse, { desc = "hover.nvim (mouse)" })
+			vim.o.mousemoveevent = true
+		end,
 	},
-	{
-		"nvzone/minty",
-		cmd = { "Shades", "Huefy" },
-	},
+
 	{
 		"echasnovski/mini.move",
 		version = false,
-		-- Module mappings. Use `''` (empty string) to disable one.
-		mappings = {
-			-- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
-			left = "<M-h>",
-			right = "<M-l>",
-			down = "<M-j>",
-			up = "<M-k>",
+		config = function()
+			require("mini.move").setup({
+				-- Module mappings. Use `''` (empty string) to disable one.
+				mappings = {
+					-- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+					left = "<M-h>",
+					right = "<M-l>",
+					down = "<M-j>",
+					up = "<M-k>",
 
-			-- Move current line in Normal mode
-			line_left = "<M-h>",
-			line_right = "<M-l>",
-			line_down = "<M-j>",
-			line_up = "<M-k>",
-		},
+					-- Move current line in Normal mode
+					line_left = "<M-h>",
+					line_right = "<M-l>",
+					line_down = "<M-j>",
+					line_up = "<M-k>",
+				},
 
-		-- Options which control moving behavior
-		options = {
-			-- Automatically reindent selection during linewise vertical move
-			reindent_linewise = true,
-		},
+				-- Options which control moving behavior
+				options = {
+					-- Automatically reindent selection during linewise vertical move
+					reindent_linewise = true,
+				},
+			})
+		end,
 	},
 	{
 		"iamcco/markdown-preview.nvim",
