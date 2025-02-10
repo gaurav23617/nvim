@@ -1,7 +1,11 @@
 return {
 	"mikavilpas/yazi.nvim",
-	event = "VeryLazy",
-	keys = {
+  cmd = {
+    "Yazi",
+    "Yazi cwd",
+    "Yazi toggle",
+  },
+  keys = {
 		-- 👇 in this section, choose your own keymappings!
 		{
 			"<leader>-",

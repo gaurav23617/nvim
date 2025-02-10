@@ -1,22 +1,18 @@
 return {
 	"nvim-lua/plenary.nvim", -- lua functions that many plugins use
 	"christoomey/vim-tmux-navigator", -- tmux & split window navigation
-	{ "echasnovski/mini.animate", version = false },
+	{ "echasnovski/mini.animate", version = false },  
+  {
+    "OXY2DEV/helpview.nvim",
+    lazy = false
+  },
 	{
 		"m4xshen/hardtime.nvim",
 		-- lazy = true,
 		dependencies = { "MunifTanjim/nui.nvim" },
 		opts = {},
 	},
-	{
-		"mg979/vim-visual-multi",
-		branch = "master",
-		init = function()
-			vim.g.VM_maps = {
-				["Find Under"] = "<C-S-d>",
-			}
-		end,
-	},
+	
 	{
 		"toppair/peek.nvim",
 		event = { "VeryLazy" },
@@ -31,6 +27,7 @@ return {
 	},
 	{
 		"lewis6991/hover.nvim",
+  event = { "InsertEnter" },
 		config = function()
 			require("hover").setup({
 				init = function()
@@ -98,6 +95,7 @@ return {
 	},
 	{
 		"iamcco/markdown-preview.nvim",
+    	event = { "BufReadPre", "BufNewFile" },
 		keys = {
 			{
 				"<leader>mp",
@@ -109,6 +107,7 @@ return {
 	},
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
+    	event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
 		---@module 'render-markdown'
 		---@type render.md.UserConfig

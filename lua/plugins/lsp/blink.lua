@@ -1,5 +1,6 @@
 return {
 	"saghen/blink.cmp",
+	event = { "InsertEnter" },
 	dependencies = {
 		"moyiz/blink-emoji.nvim",
 		"Kaiser-Yang/blink-cmp-dictionary",
@@ -7,7 +8,6 @@ return {
 		"folke/lazydev.nvim",
 	},
 	version = "*",
-	event = { "InsertEnter" },
 	config = function()
 		-- Safe import of blink.cmp
 		local blink_cmp_ok, blink_cmp = pcall(require, "blink.cmp")
@@ -151,10 +151,10 @@ return {
 						max_items = 8,
 						min_keyword_length = 3,
 						opts = {
-							dictionary_directories = { vim.fn.expand("../../dictionaries") },
+							dictionary_directories = { vim.fn.expand("~/.config/nvim/dictionaries") },
 							dictionary_files = {
-								vim.fn.expand("../../spell/en.utf-8.add"),
-								vim.fn.expand("../../spell/es.utf-8.add"),
+								vim.fn.expand("~/.config/nvim/spell/en.utf-8.add"),
+								vim.fn.expand("~/.config/nvim/spell/es.utf-8.add"),
 							},
 						},
 					},
