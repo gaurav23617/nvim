@@ -38,11 +38,29 @@ return {
       })
     end,
   },
-
+  {
+    "echasnovski/mini.surround",
+    version = "*",
+    event = "InsertEnter",
+    opts = {
+      mappings = {
+        add = "sra", -- Add surrounding in Normal and Visual modes
+        delete = "srd", -- Delete surrounding
+        find = "srf", -- Find surrounding (to the right)
+        find_left = "srF", -- Find surrounding (to the left)
+        highlight = "srh", -- Highlight surrounding
+        replace = "srr", -- Replace surrounding
+        update_n_lines = "srn", -- Update `n_lines`
+      },
+      keys = {
+        { "sr", "", desc = "+surround" },
+      },
+    },
+  },
   {
     -- Rainbow Delimiters: Colorize brackets and delimiters
     "HiPhish/rainbow-delimiters.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       local rainbow_delimiters = require("rainbow-delimiters")
 
