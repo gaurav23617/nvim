@@ -1,6 +1,6 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
-  envent = {
+  cmd = {
     "Neotree toggle filesystem",
     "Neotree toggle buffers",
     "Neotree toggle git_status",
