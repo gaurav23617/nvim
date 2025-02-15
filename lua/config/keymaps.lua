@@ -15,7 +15,7 @@ keymap("n", "<leader>ss", ":w<CR>", "Save file")
 keymap("n", "<leader>wq", "<ESC>:wq<CR>", "Save and exit file")
 keymap("n", "<leader>wqa", "<ESC>:wqa<CR>", "Save file and exit nvim")
 
-keymap("n", "<leader>q", ":q", "Exit file")
+keymap("n", "<leader>q", "<ESC>:q<CR>", "Exit file")
 
 -- Clear search highlighting
 keymap("n", "<Esc>", ":nohlsearch<CR>", "Clear search highlighting")
@@ -54,3 +54,4 @@ keymap("n", "<leader>pl", "<cmd>Lazy<CR>", "Lazy")
 keymap("n", "<leader>pi", "<cmd>Lazy install<CR>", "Lazy install")
 keymap("n", "<leader>pu", "<cmd>Lazy update<CR>", "Lazy update")
 keymap("n", "<leader>pm", "<cmd>Mason<CR>", "Mason")
+keymap("n", "<leader>pmu", "<cmd>MasonUpdate<CR>", "Mason update")

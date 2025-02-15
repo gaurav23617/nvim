@@ -1,5 +1,5 @@
 return {
-	"mikavilpas/yazi.nvim",
+  "mikavilpas/yazi.nvim",
   cmd = {
     "Yazi",
     "Yazi cwd",

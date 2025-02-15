@@ -93,6 +93,10 @@ return {
     notifier = {
       enabled = true,
     },
+    lazygit = {
+      enabled = true,
+      theme_path = vim.fs.normalize(vim.fn.stdpath("cache") .. "~/.config/lazygit/config.yml"),
+    },
     notify = {
       enabled = true,
     },
@@ -107,6 +111,15 @@ return {
     },
     words = {
       enabled = false,
+    },
+  },
+  keys = {
+    {
+      "<leader>gg",
+      function()
+        Snacks.lazygit()
+      end,
+      desc = "Lazygit",
     },
   },
 }
