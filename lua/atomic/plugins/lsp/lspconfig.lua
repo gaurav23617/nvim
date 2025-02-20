@@ -1,6 +1,11 @@
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
+    {
+      "folke/neoconf.nvim",
+      cmd = "Neoconf",
+      opts = {},
+    },
     "williamboman/mason-lspconfig.nvim",
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "folke/neodev.nvim", opts = {} },
