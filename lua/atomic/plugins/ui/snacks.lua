@@ -141,6 +141,21 @@ return {
       end,
       desc = "Recent",
     },
+    {
+      "<leader>fw",
+      function()
+        Snacks.picker.grep()
+      end,
+      desc = "Grep",
+    },
+    {
+      "<leader>fW",
+      function()
+        Snacks.picker.grep_word()
+      end,
+      desc = "Visual selection or word",
+      mode = { "n", "x" },
+    },
     -- git
     {
       "<leader>gb",
