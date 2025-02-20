@@ -23,24 +23,27 @@ require("lazy").setup({
 	spec = { -- import your plugins
 		{
 			{
-				import = "plugins",
+				import = "atomic.plugins",
 			},
 			{
-				import = "plugins.lsp",
+				import = "atomic.plugins.lsp",
 			},
 			{
-				import = "plugins.git",
+				import = "atomic.plugins.git",
 			},
 			{
-				import = "plugins.ui",
+				import = "atomic.plugins.ui",
+			},
+			{
+				import = "atomic.plugins.utils",
 			},
 		},
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
-	install = {
-		colorscheme = { "catppuccin" },
-	},
+	-- install = {
+	-- 	colorscheme = { "catppuccin" },
+	-- },
 	-- automatically check for plugin updates
 	checker = {
 		enabled = true,
