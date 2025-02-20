@@ -24,7 +24,8 @@ opt.mouse = "a" -- enable mouse mode
 opt.pumblend = 10 -- popup blend
 opt.pumheight = 10 -- maximum number of entries in a popup
 opt.scrolloff = 4 -- lines of context
-opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+opt.sessionoptions =
+  { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 opt.shiftround = true -- round indent
 opt.shiftwidth = 2 -- 2 spaces for indent width
 opt.shortmess:append({ w = true, i = true, c = true })
