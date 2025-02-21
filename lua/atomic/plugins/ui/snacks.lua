@@ -121,6 +121,21 @@ return {
       desc = "Find Files",
     },
     {
+      "<leader>fw",
+      function()
+        Snacks.picker.grep()
+      end,
+      desc = "Grep",
+    },
+    {
+      "<leader>fW",
+      function()
+        Snacks.picker.grep_word()
+      end,
+      desc = "Visual selection or word",
+      mode = { "n", "x" },
+    },
+    {
       "<leader>fg",
       function()
         Snacks.picker.git_files()
@@ -140,21 +155,6 @@ return {
         Snacks.picker.recent()
       end,
       desc = "Recent",
-    },
-    {
-      "<leader>fw",
-      function()
-        Snacks.picker.grep()
-      end,
-      desc = "Grep",
-    },
-    {
-      "<leader>fW",
-      function()
-        Snacks.picker.grep_word()
-      end,
-      desc = "Visual selection or word",
-      mode = { "n", "x" },
     },
     -- git
     {
