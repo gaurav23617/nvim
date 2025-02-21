@@ -6,12 +6,8 @@ return {
   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = true },
-    toggle = {
-      enabled = true,
-    },
-    image = {
-      enabled = true,
-    },
+    toggle = { enabled = true },
+    image = { enabled = true },
     explorer = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
@@ -26,6 +22,7 @@ return {
     statuscolumn = { enabled = true },
     words = { enabled = true },
   },
+
   init = function()
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
