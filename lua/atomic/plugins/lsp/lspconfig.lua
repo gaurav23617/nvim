@@ -23,131 +23,92 @@ return {
       })
     end
 
-    -- Attach LSP keymaps when LSP starts
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)
-        local opts = { buffer = ev.buf, silent = true }
+        local opts = { buffer = ev.buf, silent = true, desc = "LSP Keybindings" }
 
-        -- Standard LSP keymaps
-        keymap.set(
-          "n",
-          "gR",
-          "<cmd>Telescope lsp_references<CR>",
-          { desc = "Show LSP references", buffer = ev.buf }
-        )
         keymap.set(
           "n",
           "gD",
           vim.lsp.buf.declaration,
-          { desc = "Go to declaration", buffer = ev.buf }
+          { desc = "Go to Declaration", buffer = ev.buf }
         )
         keymap.set(
           "n",
           "gd",
-          "<cmd>Telescope lsp_definitions<CR>",
-          { desc = "Show LSP definitions", buffer = ev.buf }
+          vim.lsp.buf.definition,
+          { desc = "Go to Definition", buffer = ev.buf }
+        )
+        keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Find References", buffer = ev.buf })
+        keymap.set(
+          "n",
+          "gI",
+          vim.lsp.buf.implementation,
+          { desc = "Go to Implementation", buffer = ev.buf }
         )
         keymap.set(
           "n",
-          "gi",
-          "<cmd>Telescope lsp_implementations<CR>",
-          { desc = "Show LSP implementations", buffer = ev.buf }
+          "gy",
+          vim.lsp.buf.type_definition,
+          { desc = "Go to Type Definition", buffer = ev.buf }
         )
+        keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation", buffer = ev.buf })
         keymap.set(
-          "n",
-          "gt",
-          "<cmd>Telescope lsp_type_definitions<CR>",
-          { desc = "Show LSP type definitions", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "<leader>ca",
-          vim.lsp.buf.code_action,
-          { desc = "See available code actions", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "<leader>rn",
-          vim.lsp.buf.rename,
-          { desc = "Smart rename", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "<leader>D",
-          "<cmd>Telescope diagnostics bufnr=0<CR>",
-          { desc = "Show buffer diagnostics", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "<leader>d",
-          vim.diagnostic.open_float,
-          { desc = "Show line diagnostics", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "[d",
-          vim.diagnostic.goto_prev,
-          { desc = "Go to previous diagnostic", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "]d",
-          vim.diagnostic.goto_next,
-          { desc = "Go to next diagnostic", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "K",
-          vim.lsp.buf.hover,
-          { desc = "Show documentation for what is under cursor", buffer = ev.buf }
-        )
-        keymap.set("n", "<leader>rs", ":LspRestart<CR>", { desc = "Restart LSP", buffer = ev.buf })
-
-        keymap.set(
-          "n",
+          "i",
           "<C-k>",
           vim.lsp.buf.signature_help,
           { desc = "Signature Help", buffer = ev.buf }
         )
         keymap.set(
           "n",
-          "<leader>wa",
-          vim.lsp.buf.add_workspace_folder,
-          { desc = "Add workspace folder", buffer = ev.buf }
+          "<leader>ca",
+          vim.lsp.buf.code_action,
+          { desc = "Code Actions", buffer = ev.buf }
         )
         keymap.set(
           "n",
-          "<leader>wr",
-          vim.lsp.buf.remove_workspace_folder,
-          { desc = "Remove workspace folder", buffer = ev.buf }
+          "<leader>cr",
+          vim.lsp.buf.rename,
+          { desc = "Rename Symbol", buffer = ev.buf }
         )
-        keymap.set("n", "<leader>wl", function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, { desc = "List workspace folders", buffer = ev.buf })
-
-        -- Format buffer
         keymap.set("n", "<leader>cf", function()
           vim.lsp.buf.format({ async = true })
         end, { desc = "Format Document", buffer = ev.buf })
+        keymap.set(
+          "n",
+          "[d",
+          vim.diagnostic.goto_prev,
+          { desc = "Previous Diagnostic", buffer = ev.buf }
+        )
+        keymap.set(
+          "n",
+          "]d",
+          vim.diagnostic.goto_next,
+          { desc = "Next Diagnostic", buffer = ev.buf }
+        )
+        keymap.set(
+          "n",
+          "<leader>d",
+          vim.diagnostic.open_float,
+          { desc = "Show Diagnostics", buffer = ev.buf }
+        )
 
-        -- Find workspace symbols
-        keymap.set(
-          "n",
-          "<leader>ws",
-          "<cmd>Telescope lsp_workspace_symbols<CR>",
-          { desc = "Find workspace symbols", buffer = ev.buf }
-        )
-        keymap.set(
-          "n",
-          "<leader>ds",
-          "<cmd>Telescope lsp_document_symbols<CR>",
-          { desc = "Find document symbols", buffer = ev.buf }
-        )
+        keymap.set("n", "[[", function()
+          Snacks.words.jump(-vim.v.count1)
+        end, { desc = "Previous Reference", buffer = ev.buf })
+        keymap.set("n", "]]", function()
+          Snacks.words.jump(vim.v.count1)
+        end, { desc = "Next Reference", buffer = ev.buf })
+        keymap.set("n", "<a-p>", function()
+          Snacks.words.jump(-vim.v.count1, true)
+        end, { desc = "Previous Highlighted Reference", buffer = ev.buf })
+        keymap.set("n", "<a-n>", function()
+          Snacks.words.jump(vim.v.count1, true)
+        end, { desc = "Next Highlighted Reference", buffer = ev.buf })
       end,
     })
 
-    -- Setup Mason and LSP handlers
     mason_lspconfig.setup_handlers({
       function(server_name)
         setup_lsp(server_name)
