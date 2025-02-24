@@ -40,7 +40,12 @@ return {
         globalstatus = true, -- Enables a global statusline
       },
       sections = {
-        lualine_a = { "mode" },
+        lualine_a = {
+          {
+            "mode",
+            icon = " ",
+          },
+        },
         lualine_b = {
           "branch",
           "diff",
