@@ -1,5 +1,7 @@
 vim.cmd("let g:netrw_liststyle = 3")
 
+vim.g.have_nerd_font = true
+
 local opt = vim.opt
 
 opt.autowrite = true -- enable auto write
@@ -9,7 +11,11 @@ opt.confirm = true -- confirm to save changes before exiting modified buffer
 -- opt.cursorline = true -- enable highlighting of the current line
 opt.expandtab = true -- use spaces instead of tabs
 
-opt.foldlevel = 99
+opt.foldcolumn = "1" -- show foldcolumn
+opt.foldenable = true -- enable fold for nvim-ufo
+opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
+opt.foldlevelstart = 99 -- start with all code unfolded
+opt.statuscolumn = [[%!v:lua.require'ufo'.getFoldIndicator(v:lnum)]]
 opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
