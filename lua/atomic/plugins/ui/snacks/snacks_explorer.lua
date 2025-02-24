@@ -1,7 +1,7 @@
 return {
   "folke/snacks.nvim",
   opts = {
-    explorer = {},
+    explor = {},
   },
   keys = {
     {

@@ -21,7 +21,7 @@ return {
       force = false, -- try displaying the image, even if the terminal does not support it
       doc = {
         enabled = true,
-        inline = true,
+        inline = false,
         float = true,
         max_width = 80,
         max_height = 40,

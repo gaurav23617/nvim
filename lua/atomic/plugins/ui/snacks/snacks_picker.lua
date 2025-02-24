@@ -1,7 +1,10 @@
 return {
   "folke/snacks.nvim",
   opts = {
-    picker = {},
+    picker = {
+      preset = "sidebar",
+      layout = { position = "rigt" },
+    },
   },
   keys = {
     {
