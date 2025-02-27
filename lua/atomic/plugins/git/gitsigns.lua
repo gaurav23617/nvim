@@ -1,6 +1,6 @@
 return {
   "lewis6991/gitsigns.nvim",
-  event = { "VeryLazy", "BufReadPre", "BufNewFile" },
+  event = { "BufReadPre", "BufNewFile" },
   opts = {
 
     auto_attach = true,
