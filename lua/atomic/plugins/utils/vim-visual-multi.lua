@@ -1,7 +1,7 @@
 return {
   "mg979/vim-visual-multi",
   branch = "master",
-  event = "VeryLazy",
+  event = { "BufReadPre", "BufNewFile" },
   init = function()
     -- Disable default mappings except for <C-n>
     vim.g.VM_default_mappings = 0
