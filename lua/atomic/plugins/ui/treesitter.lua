@@ -1,4 +1,5 @@
 return {
+  -- Keybinding Helper
   {
     "folke/which-key.nvim",
     opts = {
@@ -8,14 +9,18 @@ return {
       },
     },
   },
+
+  -- Treesitter Core
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile" }, -- Lazy load for faster startup
+    event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
       "windwp/nvim-ts-autotag", -- Auto-close & rename HTML tags
+      "nvim-treesitter/nvim-treesitter-textobjects", -- Treesitter text objects
     },
     opts_extend = { "ensure_installed" },
+
     -- Initialize Treesitter Early to Prevent Lazy Load Issues
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
@@ -26,7 +31,7 @@ return {
 
     -- Keybindings for Incremental Selection
     keys = {
-      { "<c-space>", desc = "Increment Selection" },
+      { "<C-space>", desc = "Increment Selection" },
       { "<BS>", desc = "Decrement Selection", mode = "x" },
     },
 
@@ -42,7 +47,6 @@ return {
           end
         end,
       },
-
       indent = {
         enable = true,
         disable = { "python", "yaml" },
@@ -83,34 +87,49 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<c-space>",
-          node_incremental = "<c-space>",
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
           scope_incremental = false,
           node_decremental = "<BS>",
         },
       },
+
+      textobjects = {
+        move = {
+          enable = true,
+          goto_next_start = {
+            ["]f"] = "@function.outer",
+            ["]c"] = "@class.outer",
+            ["]a"] = "@parameter.inner",
+          },
+          goto_next_end = {
+            ["]F"] = "@function.outer",
+            ["]C"] = "@class.outer",
+            ["]A"] = "@parameter.inner",
+          },
+          goto_previous_start = {
+            ["[f"] = "@function.outer",
+            ["[c"] = "@class.outer",
+            ["[a"] = "@parameter.inner",
+          },
+          goto_previous_end = {
+            ["[F"] = "@function.outer",
+            ["[C"] = "@class.outer",
+            ["[A"] = "@parameter.inner",
+          },
+        },
+      },
     },
+
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
+
+  -- Automatically add closing tags for HTML and JSX
   {
-    "nvim-treesitter/nvim-treesitter-context",
-    event = { "VeryLazy", "BufReadPre", "BufNewFile" },
-    opts = function()
-      local tsc = require("treesitter-context")
-      Snacks.toggle({
-        name = "Treesitter Context",
-        get = tsc.enabled,
-        set = function(state)
-          if state then
-            tsc.enable()
-          else
-            tsc.disable()
-          end
-        end,
-      }):map("<leader>ut")
-      return { mode = "cursor", max_lines = 3 }
-    end,
+    "windwp/nvim-ts-autotag",
+    event = "BufReadPost",
+    opts = {},
   },
 }
