@@ -19,6 +19,18 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Add LazyFile event
+local lazy_file_events = { "BufReadPost", "BufNewFile", "BufWritePre" }
+
+local function lazy_file()
+  local Event = require("lazy.core.handler.event")
+  Event.mappings.LazyFile = { id = "LazyFile", event = lazy_file_events }
+  Event.mappings["User LazyFile"] = Event.mappings.LazyFile
+end
+
+-- Register LazyFile event
+lazy_file()
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = { -- import your plugins
