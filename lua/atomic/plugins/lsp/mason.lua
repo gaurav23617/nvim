@@ -1,64 +1,64 @@
 return {
   "williamboman/mason.nvim",
-  event = "BufReadPre",
+  event = "VeryLazy", -- Ensures Mason loads early
   dependencies = {
     "williamboman/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
   },
-  build = function()
-    pcall(vim.cmd, "MasonUpdate") -- Auto-update Mason
-  end,
-
+  cmd = "Mason",
+  keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+  build = ":MasonUpdate",
+  opts_extend = { "ensure_installed" },
   opts = {
-    ui = {
-      icons = {
-        package_installed = "✓",
-        package_pending = "➜",
-        package_uninstalled = "✗",
-      },
+    ensure_installed = {
+      "biome",
+      "ts_ls",
+      "html",
+      "cssls",
+      "tailwindcss",
+      "svelte",
+      "lua_ls",
+      "graphql",
+      "emmet_ls",
+      "prismals",
+      "pyright",
+      "jsonls",
+      "stylua",
+      "shfmt",
+      "prettier",
+      "eslint_d",
     },
   },
-
+  ---@param opts MasonSettings | {ensure_installed: string[]}
   config = function(_, opts)
-    local mason = require("mason")
-    local mason_lspconfig = require("mason-lspconfig")
-    local mason_tool_installer = require("mason-tool-installer")
+    require("mason").setup(opts)
+    local mr = require("mason-registry")
 
-    mason.setup(opts)
+    -- Ensure all required tools are installed
+    local function install_missing_tools()
+      for _, tool in ipairs(opts.ensure_installed) do
+        local p = mr.get_package(tool)
+        if not p:is_installed() then
+          p:install()
+        end
+      end
+    end
 
-    -- Configure Mason LSP
-    mason_lspconfig.setup({
-      ensure_installed = {
-        "biome",
-        "ts_ls",
-        "html",
-        "cssls",
-        "tailwindcss",
-        "svelte",
-        "lua_ls",
-        "graphql",
-        "emmet_ls",
-        "prismals",
-        "pyright",
-        "jsonls",
-      },
-      automatic_installation = true,
-    })
+    -- Trigger FileType event after a package is installed
+    mr:on("package:install:success", function()
+      vim.defer_fn(function()
+        require("lazy.core.handler.event").trigger({
+          event = "FileType",
+          buf = vim.api.nvim_get_current_buf(),
+        })
+      end, 100)
+    end)
 
-    -- Install Additional Tools
-    mason_tool_installer.setup({
-      ensure_installed = {
-        "biome",
-        "stylua",
-        "shfmt",
-        "prettier",
-        "eslint_d",
-      },
-    })
-
-    -- REMOVE THIS TO PREVENT MASON UI FROM OPENING AUTOMATICALLY
-    -- vim.defer_fn(function()
-    --   require("mason.ui").open()
-    -- end, 100)
+    -- Wait for registry refresh before installing packages
+    if mr.refresh then
+      mr.refresh(install_missing_tools)
+    else
+      install_missing_tools()
+    end
   end,
 }
