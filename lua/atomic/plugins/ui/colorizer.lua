@@ -34,13 +34,13 @@ return {
         AARRGGBB = false, -- 0xAARRGGBB hex codes
         rgb_fn = false, -- CSS rgb() and rgba() functions
         hsl_fn = false, -- CSS hsl() and hsla() functions
-        css = false, -- Enable all CSS *features*:
+        css = true, -- Enable all CSS *features*:
         -- names, RGB, RGBA, RRGGBB, RRGGBBAA, AARRGGBB, rgb_fn, hsl_fn
         css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
         -- Tailwind colors.  boolean|'normal'|'lsp'|'both'.  True sets to 'normal'
-        tailwind = false, -- Enable tailwind colors
+        tailwind = true, -- Enable tailwind colors
         tailwind_opts = { -- Options for highlighting tailwind names
-          update_names = false, -- When using tailwind = 'both', update tailwind names from LSP results.  See tailwind section
+          update_names = true, -- When using tailwind = 'both', update tailwind names from LSP results.  See tailwind section
         },
         -- parsers can contain values used in `user_default_options`
         sass = { enable = false, parsers = { "css" } }, -- Enable sass colors
