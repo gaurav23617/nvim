@@ -14,6 +14,75 @@ return {
     end
   end,
   opts = function()
+    -- Helper function to get highlight colors safely
+    local function get_color(group)
+      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
+      if ok and hl and hl.fg then
+        return { fg = string.format("#%06x", hl.fg) }
+      end
+      return { fg = "#ffffff" } -- Default to white if unavailable
+    end
+
+    -- Function to show status components with colors
+    local function status_component(icon, status)
+      local colors = {
+        ok = "special",
+        error = "diagnosticerror",
+        pending = "diagnosticwarn",
+      }
+      return {
+        function()
+          return icon
+        end,
+        cond = function()
+          return status() ~= nil
+        end,
+        color = function()
+          return get_color(colors[status()] or colors.ok)
+        end,
+      }
+    end
+
+    -- Function to get the root directory name
+    local function root_dir()
+      return function()
+        local cwd = vim.fn.getcwd()
+        return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
+      end
+    end
+
+    -- Function to format file paths nicely
+    local function pretty_path()
+      return function()
+        local path = vim.fn.expand("%:p")
+        if path == "" then
+          return ""
+        end
+
+        local cwd = vim.fn.getcwd()
+        if path:find(cwd, 1, true) == 1 then
+          path = path:sub(#cwd + 2)
+        end
+
+        local parts = vim.split(path, "[\\/]")
+        if #parts > 3 then
+          parts = { parts[1], "…", unpack(parts, #parts - 2, #parts) }
+        end
+
+        return table.concat(parts, "/")
+      end
+    end
+
+    -- Ensure lazy.status exists before calling it
+    local lazy_updates = function()
+      local ok, lazy_status = pcall(require, "lazy.status")
+      return ok and lazy_status.updates() or ""
+    end
+    local lazy_has_updates = function()
+      local ok, lazy_status = pcall(require, "lazy.status")
+      return ok and lazy_status.has_updates()
+    end
+
     local lazy_status = require("lazy.status")
     local noice = require("noice")
 
@@ -45,7 +114,11 @@ return {
             symbols = { error = " ", warn = " ", info = " ", hint = " " },
           },
         },
-        lualine_c = { { "filename", path = 1 } },
+        lualine_c = {
+          root_dir(),
+          { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+          { pretty_path() },
+        },
         lualine_x = {
           {
             function()
@@ -64,8 +137,8 @@ return {
             color = { fg = "#ff0000" },
           },
           {
-            lazy_status.updates,
-            cond = lazy_status.has_updates,
+            lazy_updates,
+            cond = lazy_has_updates,
             color = { fg = "#ff9e64" },
           },
           {
@@ -108,7 +181,7 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-      extensions = { "quickfix", "fugitive" },
+      extensions = { "neo-tree", "lazy", "fzf", "quickfix", "fugitive" },
     }
   end,
 }
