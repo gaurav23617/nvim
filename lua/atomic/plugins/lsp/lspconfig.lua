@@ -8,7 +8,8 @@ return {
     },
     "williamboman/mason-lspconfig.nvim",
     { "antosha417/nvim-lsp-file-operations", config = true },
-    { "folke/neodev.nvim", opts = {} },
+    "folke/lazydev.nvim",
+    "saghen/blink.cmp",
   },
   event = { "BufReadPre", "BufNewFile" },
   config = function()
@@ -16,6 +17,11 @@ return {
     local mason_lspconfig = require("mason-lspconfig")
     local keymap = vim.keymap
     local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+    for server, config in pairs(opts.servers) do
+      config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+      lspconfig[server].setup(config)
+    end
 
     local function setup_lsp(server)
       lspconfig[server].setup({
