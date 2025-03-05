@@ -7,6 +7,9 @@ return {
   },
   config = function()
     require("lspsaga").setup({
+      ui = {
+        code_action = "",
+      },
       symbol_in_winbar = {
         enable = true,
         separator = "| ",
@@ -37,5 +40,6 @@ return {
     keymap("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
     keymap("n", "<leader>ln", "<cmd>Lspsaga rename ++project<CR>")
     keymap("n", "K", "<cmd>Lspsaga hover_doc<CR>")
+    keymap("n", "t", "<cmd>Lspsaga term_toggle")
   end,
 }
