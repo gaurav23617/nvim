@@ -1,7 +1,7 @@
 local function keymap(mode, keys, action, desc)
-	local opts = { noremap = true, silent = true, desc = desc or "" }
+  local opts = { noremap = true, silent = true, desc = desc or "" }
 
-	vim.keymap.set(mode, keys, action, opts)
+  vim.keymap.set(mode, keys, action, opts)
 end
 
 -- Insert mode shortcuts
