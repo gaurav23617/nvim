@@ -12,8 +12,8 @@ return {
   opts = {
     ensure_installed = {
       "biome",
-      "ts_ls",
-      "html",
+      "eslint-lsp",
+      "html-lsp",
       "cssls",
       "tailwindcss",
       "svelte",
