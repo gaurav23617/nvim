@@ -14,41 +14,15 @@ return {
     end
   end,
   opts = function()
-    -- Helper function to get highlight colors safely
-    local function get_color(group)
-      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
-      if ok and hl and hl.fg then
-        return { fg = string.format("#%06x", hl.fg) }
-      end
-      return { fg = "#ffffff" } -- Default to white if unavailable
-    end
-
-    -- Function to show status components with colors
-    local function status_component(icon, status)
-      local colors = {
-        ok = "special",
-        error = "diagnosticerror",
-        pending = "diagnosticwarn",
-      }
+    -- Function to get the root directory name with a fixed color
+    local function root_dir()
       return {
         function()
-          return icon
+          local cwd = vim.fn.getcwd()
+          return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
         end,
-        cond = function()
-          return status() ~= nil
-        end,
-        color = function()
-          return get_color(colors[status()] or colors.ok)
-        end,
+        color = { fg = "#16bc40" },
       }
-    end
-
-    -- Function to get the root directory name
-    local function root_dir()
-      return function()
-        local cwd = vim.fn.getcwd()
-        return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
-      end
     end
 
     -- Function to format file paths nicely
@@ -90,6 +64,32 @@ return {
     local function macro_recording()
       local recording_register = vim.fn.reg_recording()
       return recording_register ~= "" and ("Recording @" .. recording_register) or ""
+    end
+
+    -- Function to get Copilot status
+    local function copilot_status()
+      if not package.loaded["copilot"] then
+        return " "
+      end
+
+      local clients = vim.lsp.get_clients({ name = "copilot" })
+      if #clients == 0 then
+        return " "
+      end
+
+      local copilot = require("copilot.api").status.data
+      if copilot and copilot.status then
+        local status = copilot.status
+        local icons = {
+          ["InProgress"] = " ", -- Spinner
+          ["Warning"] = " ", -- Warning
+          ["Error"] = " ", -- Error
+          ["Unknown"] = " ", -- Unknown
+          ["Normal"] = " ", -- Active
+        }
+        return icons[status]
+      end
+      return " "
     end
 
     return {
@@ -142,29 +142,19 @@ return {
             color = { fg = "#ff9e64" },
           },
           {
-            "copilot",
-            symbols = {
-              status = {
-                icons = {
-                  enabled = " ",
-                  sleep = " ",
-                  disabled = " ",
-                  warning = " ",
-                  unknown = " ",
-                },
-                hl = {
-                  enabled = "#50FA7B",
-                  sleep = "#AEB7D0",
-                  disabled = "#6272A4",
-                  warning = "#FFB86C",
-                  unknown = "#FF5555",
-                },
-              },
-              spinners = "dots",
-              spinner_color = "#6272A4",
-            },
-            show_colors = false,
-            show_loading = true,
+            copilot_status,
+            color = function()
+              local copilot = package.loaded["copilot"] and require("copilot.api").status.data
+              if copilot and copilot.status then
+                local status = copilot.status
+                return {
+                  fg = (status == "InProgress" and "#FFB86C")
+                    or (status == "Warning" and "#FF5555")
+                    or "#50FA7B",
+                }
+              end
+              return { fg = "#6272A4" }
+            end,
           },
           { "encoding" },
           { "fileformat" },
