@@ -2,8 +2,9 @@ return {
   "folke/snacks.nvim",
   opts = {
     picker = {
-      preset = "sidebar",
-      layout = { position = "rigt" },
+      -- layout = {
+      --   preset = "vscode",
+      -- },
     },
   },
   keys = {
