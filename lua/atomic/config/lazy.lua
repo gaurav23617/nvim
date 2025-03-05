@@ -39,7 +39,13 @@ require("lazy").setup({
         import = "atomic.plugins",
       },
       {
+        import = "atomic.plugins.ai",
+      },
+      {
         import = "atomic.plugins.lsp",
+      },
+      {
+        import = "atomic.plugins.lsp.blink",
       },
       {
         import = "atomic.plugins.git",
