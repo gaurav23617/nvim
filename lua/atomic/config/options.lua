@@ -3,14 +3,15 @@ vim.cmd("let g:netrw_liststyle = 3")
 vim.g.have_nerd_font = true
 
 local opt = vim.opt
-
+opt.completeopt = { "menu", "menuone", "noselect" }
 opt.autowrite = true -- enable auto write
-opt.completeopt = "menu,menuone,noselect"
+-- opt.completeopt = "menu,menuone,noselect"
 opt.conceallevel = 2 -- hide * markup for bold and italic, but not markers with substitutions
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 -- opt.cursorline = true -- enable highlighting of the current line
 opt.expandtab = true -- use spaces instead of tabs
 
+opt.cmdheight = 0
 opt.foldcolumn = "1" -- show foldcolumn
 opt.foldenable = true -- enable fold for nvim-ufo
 opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
@@ -25,6 +26,7 @@ opt.inccommand = "nosplit" -- preview incremental substitute
 opt.jumpoptions = "view"
 opt.laststatus = 3 -- global statusline
 opt.linebreak = true -- wrap lines at convenient points
+opt.breakindent = true
 opt.list = true -- show some invisible characters (tabs...)
 opt.mouse = "a" -- enable mouse mode
 opt.pumblend = 10 -- popup blend
@@ -59,6 +61,8 @@ opt.wrap = true
 -- Tabs & Indentation
 opt.tabstop = 2 -- 2 spaces for tabs
 opt.autoindent = true -- copy indent from current line when starting a new one
+opt.smarttab = true
+opt.smartindent = true
 
 -- Search Settings
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
