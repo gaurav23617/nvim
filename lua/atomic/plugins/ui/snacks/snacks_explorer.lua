@@ -8,7 +8,6 @@ return {
           layout = { preset = "sidebar", preview = false, layout = { position = "right" } },
           exclude = {
             ".git",
-            "node_modules",
             "*.log",
             "build",
             "dist",
@@ -16,8 +15,8 @@ return {
             "*.tmp",
             "*.swp",
           },
+          include = { "*" },
 
-          include = { "README.md", ".env", ".gitignore", "package.json", "*.lua", "*.js" },
           win = {
             list = {
               keys = {

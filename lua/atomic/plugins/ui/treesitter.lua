@@ -1,22 +1,10 @@
 return {
-  -- Keybinding Helper
-  {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        { "<BS>", desc = "Decrement Selection", mode = "x" },
-        { "<c-space>", desc = "Increment Selection", mode = { "x", "n" } },
-      },
-    },
-  },
-
   -- Treesitter Core
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
-      "windwp/nvim-ts-autotag", -- Auto-close & rename HTML tags
       "nvim-treesitter/nvim-treesitter-textobjects", -- Treesitter text objects
     },
     opts_extend = { "ensure_installed" },
@@ -38,21 +26,17 @@ return {
     opts = {
       highlight = {
         enable = true,
-        disable = function(lang, buf)
-          local max_filesize = 100 * 1024 -- 100 KB
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-          if ok and stats and stats.size > max_filesize then
-            return true
-          end
-        end,
+        -- disable = function(lang, buf)
+        --   local max_filesize = 100 * 1024 -- 100 KB
+        --   local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        --   if ok and stats and stats.size > max_filesize then
+        --     return true
+        --   end
+        -- end,
       },
       indent = {
         enable = true,
         disable = { "python", "yaml" },
-      },
-
-      autotag = {
-        enable = true,
       },
 
       fold = {
@@ -74,10 +58,20 @@ return {
         "graphql",
         "bash",
         "lua",
+        "git_config",
+        "gitcommit",
+        "git_rebase",
+        "gitignore",
+        "gitattributes",
         "vim",
         "dockerfile",
         "gitignore",
         "query",
+        "latex",
+        "norg",
+        "scss",
+        "typst",
+        "vue",
         "vimdoc",
         "c",
         "regex",
@@ -125,10 +119,12 @@ return {
     end,
   },
 
-  -- Automatically add closing tags for HTML and JSX
+  -- Fix: Configure Autotag Separately
   {
     "windwp/nvim-ts-autotag",
     event = "BufReadPost",
-    opts = {},
+    config = function()
+      require("nvim-ts-autotag").setup({})
+    end,
   },
 }

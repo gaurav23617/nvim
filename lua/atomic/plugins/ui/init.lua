@@ -2,13 +2,6 @@ return {
   -- ui components
   { "MunifTanjim/nui.nvim", lazy = true },
 
-  -- dressing plugin
-  {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-    opts = {},
-  },
-
   -- Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
   {
     "folke/noice.nvim",

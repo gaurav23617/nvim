@@ -6,6 +6,7 @@ return {
         "dictionary",
         "lazydev",
         "copilot",
+        "git",
         "lsp",
         "path",
         "snippets",
@@ -25,6 +26,11 @@ return {
           module = "blink-copilot",
           score_offset = 100,
           async = true,
+        },
+        git = {
+          module = "blink-cmp-git",
+          name = "Git",
+          opts = {},
         },
         ripgrep = {
           name = "ripgrep",

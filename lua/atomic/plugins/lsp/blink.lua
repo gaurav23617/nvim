@@ -9,6 +9,10 @@ return {
   dependencies = {
     "rafamadriz/friendly-snippets",
     {
+      "Kaiser-Yang/blink-cmp-git",
+      dependencies = { "nvim-lua/plenary.nvim" },
+    },
+    {
       "L3MON4D3/LuaSnip",
       config = function()
         require("luasnip.loaders.from_snipmate").lazy_load({ paths = { "./luasnip_snippets" } })
