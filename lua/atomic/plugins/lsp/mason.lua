@@ -12,6 +12,11 @@ return {
   opts = {
     ensure_installed = {
       "biome",
+      "phpactor",
+      "intelephense",
+      "php-debug-adapter",
+      "phpcs",
+      "php-cs-fixer",
       "eslint-lsp",
       "html-lsp",
       "css-lsp",

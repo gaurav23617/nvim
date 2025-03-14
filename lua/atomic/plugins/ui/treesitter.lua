@@ -5,6 +5,7 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     build = ":TSUpdate",
     dependencies = {
+      "EmranMR/tree-sitter-blade",
       "nvim-treesitter/nvim-treesitter-textobjects", -- Treesitter text objects
     },
     opts_extend = { "ensure_installed" },
@@ -47,6 +48,7 @@ return {
         "json",
         "javascript",
         "typescript",
+        "php",
         "tsx",
         "yaml",
         "html",

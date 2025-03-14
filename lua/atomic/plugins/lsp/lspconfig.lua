@@ -50,6 +50,9 @@ return {
         timeout_ms = nil,
       },
       servers = {
+        phpactor = {
+          enabled = vim.g.php_lsp == "phpactor",
+        },
         lua_ls = {
           settings = {
             Lua = {
@@ -71,6 +74,9 @@ return {
               },
             },
           },
+        },
+        intelephense = {
+          enabled = vim.g.php_lsp == "intelephense",
         },
       },
       setup = {},

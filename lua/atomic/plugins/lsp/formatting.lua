@@ -24,6 +24,7 @@ return {
         svelte = { "prettier" },
         yaml = { "prettier" },
         markdown = { "prettier" },
+        php = { "php_cs_fixer" },
         liquid = { "prettier" },
         lua = { "stylua" },
       }

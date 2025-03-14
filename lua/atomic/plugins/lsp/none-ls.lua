@@ -35,6 +35,8 @@ return {
         nls.builtins.formatting.prettier,
         nls.builtins.formatting.shfmt,
         nls.builtins.diagnostics.eslint_d,
+        nls.builtins.formatting.phpcsfixer, -- Added phpcsfixer
+        nls.builtins.diagnostics.phpcs, -- Added phpcs
       },
       on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
