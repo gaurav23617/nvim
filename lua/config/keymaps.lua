@@ -17,6 +17,7 @@ map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit file" })
 
 -- packages
 map("n", "<leader>pl", "<cmd>Lazy<CR>", { desc = "Lazy" })
+map("n", "<leader>px", "<cmd>LazyExtras<CR>", { desc = "Lazy Extras" })
 map("n", "<leader>pi", "<cmd>Lazy install<CR>", { desc = "Lazy install" })
 map("n", "<leader>pu", "<cmd>Lazy update<CR>", { desc = "Lazy update" })
 map("n", "<leader>pm", "<cmd>Mason<CR>", { desc = "Mason" })
