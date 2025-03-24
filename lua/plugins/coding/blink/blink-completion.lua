@@ -46,7 +46,7 @@ return {
             "lsp",
           },
           columns = {
-            -- { "label", "label_detail", "label_description", gap = 1 },
+            -- { "label", "label_description", gap = 1 }, { "kind_icon", "kind" },
             { "kind_icon" },
             { "label", "label_description", gap = 1 },
             { "kind" },
@@ -130,10 +130,6 @@ return {
             },
           },
         },
-      },
-
-      ghost_text = {
-        enabled = vim.g.ai_cmp,
       },
     },
   },

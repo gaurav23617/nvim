@@ -29,7 +29,6 @@ return {
         "buffer",
         "emoji",
       },
-      per_filetype = { sql = { "dadbod" } },
       providers = {
         lsp = {
           name = "LSP",
@@ -40,7 +39,6 @@ return {
         env = {
           name = "Env",
           module = "blink-cmp-env",
-          --- @type blink-cmp-env.Options
           opts = {
             item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
             show_braces = false,
@@ -91,10 +89,6 @@ return {
           module = "blink.cmp.sources.buffer",
           min_keyword_length = 4,
           score_offset = 15,
-        },
-        dadbod = {
-          name = "Dadbod",
-          module = "vim_dadbod_completion.blink",
         },
         snippets = {
           name = "snippets",
