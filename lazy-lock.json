@@ -1,4 +1,8 @@
 {
+  "CopilotChat.nvim": {
+    "branch": "main",
+    "commit": "16d897fd43d07e3b54478ccdb2f8a16e4df4f45a"
+  },
   "LazyVim": {
     "branch": "main",
     "commit": "6ed6b09cee0b0b281740fa4c21932d64d282b626"
@@ -9,7 +13,7 @@
   },
   "SchemaStore.nvim": {
     "branch": "main",
-    "commit": "0098dde21296a454ae1426f9ac47340dd38c27ce"
+    "commit": "6c52c57432280c54596feb0c0958e1a6cb546f4d"
   },
   "blade-nav.nvim": {
     "branch": "main",
@@ -25,11 +29,11 @@
   },
   "blink.cmp": {
     "branch": "main",
-    "commit": "72a3de8eb3abefd764062cf5dee63425c312ca2c"
+    "commit": "30f0a7b5bfed80c1e4b1f7ba065f5c36db0ce025"
   },
   "catppuccin": {
     "branch": "main",
-    "commit": "56a9dfd1e05868cf3189369aad87242941396563"
+    "commit": "62dbc841f48046dfe1be74179e92f53e1c33952c"
   },
   "conform.nvim": {
     "branch": "master",
@@ -37,7 +41,7 @@
   },
   "copilot.lua": {
     "branch": "master",
-    "commit": "a620a5a97b73faba009a8160bab2885316e1451c"
+    "commit": "5f726c8e6bbcd7461ee0b870d4e6c8a973b55b64"
   },
   "flash.nvim": {
     "branch": "main",
@@ -49,7 +53,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "f24022147ca4a0fe1d424a520a9437accbeba193"
+    "commit": "6fd719634c529bfbfe031a03b7af9d728d849dc7"
   },
   "harpoon": {
     "branch": "harpoon2",
@@ -89,7 +93,7 @@
   },
   "mini.ai": {
     "branch": "main",
-    "commit": "7f1fe86277f0e977642cf8fe15f004229f61e61a"
+    "commit": "4b5348fac5912f1957f4c012c2e0ab0c4b865386"
   },
   "mini.diff": {
     "branch": "main",
@@ -121,7 +125,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "b8e7957bde4cbb3cb25a13a62548f7c273b026e9"
+    "commit": "03bc581e05e81d33808b42b2d7e76d70adb3b595"
   },
   "nvim-treesitter": {
     "branch": "master",
@@ -153,7 +157,7 @@
   },
   "render-markdown.nvim": {
     "branch": "main",
-    "commit": "df64d5d5432e13026a79384ec4e2bab185fd4eb5"
+    "commit": "d69f0d8c80ba293d25dad498ec86e9b583a6bbbf"
   },
   "snacks.nvim": {
     "branch": "main",
@@ -193,7 +197,7 @@
   },
   "vim-tmux-navigator": {
     "branch": "master",
-    "commit": "ad4c04239d970981942d6a3e1195a770df09d0d7"
+    "commit": "96da8e10ce83b754f442c3e25d1bf74451d220f2"
   },
   "which-key.nvim": {
     "branch": "main",
