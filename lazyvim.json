@@ -16,7 +16,6 @@
     "lazyvim.plugins.extras.lang.json",
     "lazyvim.plugins.extras.lang.markdown",
     "lazyvim.plugins.extras.lang.nix",
-    "lazyvim.plugins.extras.lang.php",
     "lazyvim.plugins.extras.lang.tailwind",
     "lazyvim.plugins.extras.lang.toml",
     "lazyvim.plugins.extras.lang.typescript",
@@ -27,8 +26,6 @@
     "lazyvim.plugins.extras.util.vim-tmux"
   ],
   "install_version": 8,
-  "news": [
-
-  ],
+  "news": [],
   "version": 8
 }
