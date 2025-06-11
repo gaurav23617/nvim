@@ -27,8 +27,6 @@
     "lazyvim.plugins.extras.util.vim-tmux"
   ],
   "install_version": 8,
-  "news": [
-
-  ],
+  "news": [],
   "version": 8
 }

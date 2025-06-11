@@ -8,7 +8,7 @@ vim.loader.enable()
 -- Enable this option to avoid conflicts with Prettier.
 vim.g.lazyvim_prettier_needs_config = true
 
-vim.g.lazyvim_blink_main = true
+-- vim.g.lazyvim_blink_main = true
 vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_autoformat = false
 vim.g.lazyvim_cmp = "blink"
