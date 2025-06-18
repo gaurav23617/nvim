@@ -12,6 +12,7 @@ vim.g.lazyvim_prettier_needs_config = true
 vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_autoformat = true
 vim.g.lazyvim_cmp = "blink"
+vim.g.lazyvim_php_lsp = "intelephense"
 
 -- Set to false to disable auto format
 vim.g.lazyvim_eslint_auto_format = true
