@@ -27,6 +27,7 @@ return {
         "prettier",
         -- "black",
         -- "isort",
+        "blade-formatter",
 
         -- Linters and diagnostics
         "golangci-lint",

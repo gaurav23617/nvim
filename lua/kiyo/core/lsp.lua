@@ -11,6 +11,7 @@ vim.lsp.enable({
   "css-ls",
   "vue-ls",
   "eslint",
+  "blade",
   "basedpyright",
   "bashls",
   "css_variables",

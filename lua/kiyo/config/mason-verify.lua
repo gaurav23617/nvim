@@ -39,6 +39,7 @@ function M.verify_tools()
     "black",
     "isort",
     "shfmt",
+    "blade-formatter",
     "pint",
 
     -- Linters (Mason-managed)
