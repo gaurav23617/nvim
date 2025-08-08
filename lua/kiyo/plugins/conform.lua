@@ -24,17 +24,19 @@ return {
       -- Lua
       lua = { "stylua" },
 
-      -- Web technologies
+      -- Web technologies - Using biome for JS/TS/JSON
       javascript = { "biome" },
       typescript = { "biome" },
       javascriptreact = { "biome" },
       typescriptreact = { "biome" },
       json = { "biome" },
       jsonc = { "biome" },
+
+      -- Other web technologies that biome doesn't support
       yaml = { "prettier" },
       markdown = { "prettier" },
       html = { "prettier" },
-      css = { "biome" },
+      css = { "prettier" },
       scss = { "prettier" },
 
       -- Python
@@ -42,6 +44,7 @@ return {
 
       -- PHP/Laravel
       php = { "pint" },
+      blade = { "blade-formatter" },
 
       -- Shell
       sh = { "shfmt" },
@@ -54,6 +57,20 @@ return {
       -- markdown = { "markdownlint" },
       -- yaml = { "yamllint" },
       -- toml = { "taplo" },
+    },
+    formatters = {
+      -- Custom biome formatter configuration
+      biome = {
+        command = function()
+          local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/biome"
+          if vim.fn.executable(mason_bin) == 1 then
+            return mason_bin
+          end
+          return "biome"
+        end,
+        args = { "format", "--stdin-file-path", "$FILENAME" },
+        stdin = true,
+      },
     },
     default_format_opts = {
       lsp_format = "fallback",
