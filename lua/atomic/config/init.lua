@@ -1,5 +1,0 @@
-require("atomic.config.lsp")
-require("atomic.config.options")
-require("atomic.config.keymaps")
-require("atomic.config.auto-cmd")
-require("atomic.config.health").check()
