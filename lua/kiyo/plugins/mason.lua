@@ -1,8 +1,8 @@
 return {
   {
     "mason-org/mason.nvim",
-    lazy = false, -- Load immediately to ensure PATH is set
-    cmd = "Mason",
+    -- lazy = false, -- Load immediately to ensure PATH is set
+    cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
     opts = {
@@ -19,6 +19,8 @@ return {
         "css-lsp", -- CSS LSP
         "vue-language-server", -- Vue LSP
         "biome",
+        "nil",
+        "nixfmt",
 
         -- Formatters (for conform.nvim and general use)
         "stylua",

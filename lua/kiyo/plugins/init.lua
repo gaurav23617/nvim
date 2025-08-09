@@ -1,66 +1,6 @@
 return {
   -- ui components
   { "MunifTanjim/nui.nvim", lazy = true },
-  -- Markdown Preview
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = function()
-      require("lazy").load({ plugins = { "markdown-preview.nvim" } })
-      vim.fn["mkdp#util#install"]()
-    end,
-    keys = {
-      {
-        "<leader>cp",
-        ft = "markdown",
-        "<cmd>MarkdownPreviewToggle<cr>",
-        desc = "Markdown Preview",
-      },
-    },
-    config = function()
-      vim.cmd([[do FileType]])
-    end,
-  },
-
-  -- Render Markdown Inline
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    opts = {
-      code = {
-        sign = false,
-        width = "block",
-        right_pad = 1,
-      },
-      heading = {
-        sign = false,
-        icons = {},
-      },
-      checkbox = {
-        enabled = false,
-      },
-    },
-    ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
-    config = function(_, opts)
-      require("render-markdown")
-        .setup(opts)
-        -- require("languages")
-        .toggle({
-          name = "Render Markdown",
-          get = function()
-            return require("render-markdown.state").enabled
-          end,
-          set = function(enabled)
-            local m = require("render-markdown")
-            if enabled then
-              m.enable()
-            else
-              m.disable()
-            end
-          end,
-        })
-        :map("<leader>um")
-    end,
-  },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -107,7 +47,7 @@ return {
   -- location.
   {
     "folke/flash.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPre", "BufNewFile" },
     vscode = true,
     ---@type Flash.Config
     opts = {},
@@ -124,7 +64,6 @@ return {
   {
     "folke/lazydev.nvim",
     ft = "lua",
-    cmd = "LazyDev",
     opts = {
       library = {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
@@ -133,11 +72,13 @@ return {
   },
   {
     "mbbill/undotree",
+    event = { "BufReadPre", "BufNewFile" },
     vim.keymap.set("n", "<leader><F5>", vim.cmd.UndotreeToggle),
     vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle),
   },
   {
     "nvim-tree/nvim-web-devicons",
+    lazy = true,
     opts = {},
   },
   {
@@ -162,19 +103,6 @@ return {
     },
   },
   {
-    "sindrets/diffview.nvim",
-    cmd = {
-      "DiffviewOpen",
-    },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    keys = {
-      { "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Open DiffView for git" },
-      { "<leader>gc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView for git" },
-    },
-  },
-  {
     "NeogitOrg/neogit",
     cmd = "Neogit",
     opts = {},
@@ -186,17 +114,10 @@ return {
       { "<leader>gnf", "<cmd>Neogit fetch<cr>", desc = "Fetch" },
     },
   },
-  {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        { "<leader>gn", group = "neogit", icon = " " },
-      },
-    },
-  },
   -- Neovim plugin to improve the default vim.ui interfaces
   {
     "stevearc/dressing.nvim",
+    event = "VeryLazy",
     dependencies = { "MunifTanjim/nui.nvim" },
     opts = {},
     config = function()
@@ -205,55 +126,18 @@ return {
   },
 
   -- Neovim notifications and LSP progress messages
-  {
-    "j-hui/fidget.nvim",
-  },
-
-  -- find and replace
-  {
-    "windwp/nvim-spectre",
-    enabled = true,
-    event = "BufRead",
-    keys = {
-      {
-        "<leader>Rr",
-        function()
-          require("spectre").open()
-        end,
-        desc = "Replace",
-      },
-      {
-        "<leader>Rw",
-        function()
-          require("spectre").open_visual({ select_word = true })
-        end,
-        desc = "Replace Word",
-      },
-      {
-        "<leader>Rf",
-        function()
-          require("spectre").open_file_search()
-        end,
-        desc = "Replace Buffer",
-      },
-    },
-  },
+  -- {
+  --   "j-hui/fidget.nvim",
+  -- },
 
   -- Heuristically set buffer options
-  {
-    "tpope/vim-sleuth",
-  },
+  -- {
+  --   "tpope/vim-sleuth",
+  -- },
   -- editor config support
-  {
-    "editorconfig/editorconfig-vim",
-  },
-
-  -- persist sessions
-  {
-    "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    opts = {},
-  },
+  -- {
+  --   "editorconfig/editorconfig-vim",
+  -- },
   {
     "smjonas/inc-rename.nvim",
     cmd = "IncRename",

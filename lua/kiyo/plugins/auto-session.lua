@@ -1,5 +1,6 @@
 return {
   "rmagatti/auto-session",
+  event = "BufReadPre", -- this will only start session saving when an actual file was opened
   config = function()
     local auto_session = require("auto-session")
 

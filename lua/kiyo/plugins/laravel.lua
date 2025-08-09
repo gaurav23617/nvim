@@ -15,18 +15,18 @@ return {
     end,
   },
 
-  {
-    -- dir = "~/Developer/opensource/phprefactoring.nvim",
-    "adibhanna/phprefactoring.nvim",
-    enabled = false,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
-    ft = "php",
-    config = function()
-      require("phprefactoring").setup()
-    end,
-  },
+  -- {
+  --   -- dir = "~/Developer/opensource/phprefactoring.nvim",
+  --   "adibhanna/phprefactoring.nvim",
+  --   enabled = false,
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --   },
+  --   ft = "php",
+  --   config = function()
+  --     require("phprefactoring").setup()
+  --   end,
+  -- },
   -- {
   --   dir = "~/Developer/opensource/simplemarkdown.nvim",
   --   enabled = false,

@@ -1,5 +1,6 @@
 return {
   "adibhanna/nvim-newfile.nvim",
+  cmd = { NewFile },
   dependencies = { "MunifTanjim/nui.nvim" },
   config = function()
     require("nvim-newfile").setup({

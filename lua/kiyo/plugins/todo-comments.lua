@@ -1,7 +1,6 @@
 return {
   "folke/todo-comments.nvim",
   cmd = { "TodoTrouble", "TodoTelescope" },
-  event = "LazyFile",
   dependencies = { "nvim-lua/plenary.nvim" },
   opts = {
     keywords = {

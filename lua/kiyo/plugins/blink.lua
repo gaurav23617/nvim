@@ -1,6 +1,6 @@
 return {
   "saghen/blink.cmp",
-  -- event = { "InsertEnter" },
+  event = { "InsertEnter" },
   version = "*",
   opts_extend = {
     "sources.completion.enabled_providers",
@@ -22,16 +22,11 @@ return {
       opts = {},
     },
     "neovim/nvim-lspconfig",
-    "Kaiser-Yang/blink-cmp-dictionary",
+    -- "Kaiser-Yang/blink-cmp-dictionary",
     "folke/lazydev.nvim",
     "fang2hou/blink-copilot",
     "mikavilpas/blink-ripgrep.nvim",
     "folke/snacks.nvim",
-    {
-      "mei28/blink-bang-word-light.nvim",
-      event = { "VeryLazy" },
-      opts = {},
-    },
   },
   opts = {
     fuzzy = {},

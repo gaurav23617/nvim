@@ -1,8 +1,8 @@
 return {
   "folke/trouble.nvim",
-  cmd = "Trouble",
+  cmd = { "Trouble", "TroubleToggle" },
   opts = {}, -- for default options, refer to the configuration section for custom setup.
-  lazy = true,
+  -- lazy = true,
   specs = {
     "folke/snacks.nvim",
     opts = function(_, opts)

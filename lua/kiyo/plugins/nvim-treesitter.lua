@@ -37,6 +37,7 @@ return {
           "phpdoc",
           "blade",
           "lua",
+          "nix",
           "vim",
           "dockerfile",
           "gitignore",
@@ -57,6 +58,40 @@ return {
         },
         additional_vim_regex_highlighting = false,
       })
+      local function add(lang)
+        local parsers = treesitter.ensure_installed or {}
+        if type(parsers) == "table" then
+          table.insert(parsers, lang)
+        end
+      end
+
+      vim.filetype.add({
+        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
+        filename = { ["vifmrc"] = "vim" },
+        pattern = {
+          [".*/waybar/config"] = "jsonc",
+          [".*/mako/config"] = "dosini",
+          [".*/kitty/.+%.conf"] = "kitty",
+          [".*/hypr/.+%.conf"] = "hyprlang",
+          ["%.env%.[%w_.-]+"] = "sh",
+        },
+      })
+
+      vim.treesitter.language.register("bash", "kitty")
+
+      add("git_config")
+
+      if vim.fn.executable("hypr") == 1 then
+        add("hyprlang")
+      end
+
+      if vim.fn.executable("fish") == 1 then
+        add("fish")
+      end
+
+      if vim.fn.executable("rofi") == 1 or vim.fn.executable("wofi") == 1 then
+        add("rasi")
+      end
     end,
   },
   -- NOTE: js,ts,jsx,tsx Auto Close Tags

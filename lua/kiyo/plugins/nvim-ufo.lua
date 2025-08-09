@@ -2,6 +2,7 @@ return {
   -- Setup Folding with nvim-ufo
   {
     "kevinhwang91/nvim-ufo",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "kevinhwang91/promise-async",
     },

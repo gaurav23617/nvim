@@ -31,8 +31,9 @@ return {
       typescriptreact = { "biome" },
       json = { "biome" },
       jsonc = { "biome" },
+      nix = { "nixfmt" },
 
-      -- Other web technologies that biome doesn't support
+      -- Other webtechnologies that biome doesn't support
       yaml = { "prettier" },
       markdown = { "prettier" },
       html = { "prettier" },

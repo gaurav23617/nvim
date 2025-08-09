@@ -1,7 +1,7 @@
 return {
   {
     "rachartier/tiny-inline-diagnostic.nvim",
-    event = "VeryLazy", -- Or `LspAttach`
+    event = { "BufReadPre", "BufNewFile" },
     priority = 1000, -- needs to be loaded in first
     config = function()
       -- Default configuration

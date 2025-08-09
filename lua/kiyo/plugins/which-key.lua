@@ -38,6 +38,7 @@ return {
         { "[", group = "prev" },
         { "]", group = "next" },
         { "g", group = "goto" },
+        { "<leader>gn", group = "neogit", icon = " " },
       },
     },
   },

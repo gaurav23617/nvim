@@ -1,7 +1,7 @@
 return {
   {
     "lewis6991/gitsigns.nvim",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       -- local icons = require('config.icons')
       require("gitsigns").setup({
@@ -157,24 +157,32 @@ return {
       },
     },
   },
+  -- Git related plugins
   {
     "sindrets/diffview.nvim",
-    event = "VeryLazy",
-    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
-  },
-  -- Git related plugins
-  "tpope/vim-fugitive",
-  "tpope/vim-rhubarb",
-
-  -- not git, but it's okay
-  {
-    "mbbill/undotree",
+    cmd = {
+      "DiffviewOpen",
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
     keys = {
-      {
-        "<leader>GU",
-        ":UndotreeToggle<CR>",
-        desc = "Toggle UndoTree",
-      },
+      { "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Open DiffView for git" },
+      { "<leader>gc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView for git" },
     },
   },
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    opts = {},
+    keys = {
+      { "<leader>gnn", "<cmd>Neogit<cr>", desc = "Neogit (Root Dir)" },
+      { "<leader>gnc", "<cmd>Neogit commit<cr>", desc = "Commit" },
+      { "<leader>gnp", "<cmd>Neogit pull<cr>", desc = "Pull" },
+      { "<leader>gnP", "<cmd>Neogit push<cr>", desc = "Push" },
+      { "<leader>gnf", "<cmd>Neogit fetch<cr>", desc = "Fetch" },
+    },
+  },
+  -- "tpope/vim-fugitive",
+  -- "tpope/vim-rhubarb",
 }

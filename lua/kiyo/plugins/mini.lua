@@ -1,15 +1,14 @@
 return {
+  { "echasnovski/mini.nvim", version = false, lazy = true },
   {
     "echasnovski/mini.icons",
     enabled = true,
     opts = {},
     lazy = true,
   },
-
-  { "echasnovski/mini.nvim", version = false },
   {
     "echasnovski/mini.ai",
-    event = "VeryLazy",
+    event = { "BufReadPre", "BufNewFile" },
     opts = function()
       local ai = require("mini.ai")
       return {
@@ -118,6 +117,7 @@ return {
   },
   {
     "echasnovski/mini.files",
+    event = "VeryLazy",
     config = function()
       local MiniFiles = require("mini.files")
       MiniFiles.setup({
