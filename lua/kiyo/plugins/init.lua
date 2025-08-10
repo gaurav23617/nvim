@@ -78,7 +78,8 @@ return {
   },
   {
     "nvim-tree/nvim-web-devicons",
-    lazy = true,
+    -- lazy = true,
+    event = "VeryLazy",
     opts = {},
   },
   {
@@ -102,18 +103,6 @@ return {
       picker = "",
     },
   },
-  {
-    "NeogitOrg/neogit",
-    cmd = "Neogit",
-    opts = {},
-    keys = {
-      { "<leader>gnn", "<cmd>Neogit<cr>", desc = "Neogit (Root Dir)" },
-      { "<leader>gnc", "<cmd>Neogit commit<cr>", desc = "Commit" },
-      { "<leader>gnp", "<cmd>Neogit pull<cr>", desc = "Pull" },
-      { "<leader>gnP", "<cmd>Neogit push<cr>", desc = "Push" },
-      { "<leader>gnf", "<cmd>Neogit fetch<cr>", desc = "Fetch" },
-    },
-  },
   -- Neovim plugin to improve the default vim.ui interfaces
   {
     "stevearc/dressing.nvim",
@@ -123,6 +112,19 @@ return {
     config = function()
       require("dressing").setup()
     end,
+  },
+  {
+    "shahshlok/vim-coach.nvim",
+    cmd = "VimCoach",
+    dependencies = {
+      "folke/snacks.nvim",
+    },
+    config = function()
+      require("vim-coach").setup()
+    end,
+    keys = {
+      { "<leader>?", "<cmd>VimCoach<cr>", desc = "Vim Coach" },
+    },
   },
 
   -- Neovim notifications and LSP progress messages
