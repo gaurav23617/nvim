@@ -1,10 +1,14 @@
-local api = vim.api
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
+
+-- General autocommands
+local general = augroup("General", { clear = true })
 
 -- don't auto comment new line
-api.nvim_create_autocmd("BufEnter", { command = [[set formatoptions-=cro]] })
+autocmd("BufEnter", { command = [[set formatoptions-=cro]] })
 
 -- wrap words "softly" (no carriage return) in mail buffer
-api.nvim_create_autocmd("Filetype", {
+autocmd("Filetype", {
   pattern = "mail",
   callback = function()
     vim.opt.textwidth = 0
@@ -17,7 +21,7 @@ api.nvim_create_autocmd("Filetype", {
 })
 
 -- Highlight on yank
-api.nvim_create_autocmd("TextYankPost", {
+autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
   end,
@@ -25,7 +29,7 @@ api.nvim_create_autocmd("TextYankPost", {
 
 -- go to last loc when opening a buffer
 -- this mean that when you open a file, you will be at the last position
-api.nvim_create_autocmd("BufReadPost", {
+autocmd("BufReadPost", {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
     local lcount = vim.api.nvim_buf_line_count(0)
@@ -37,25 +41,10 @@ api.nvim_create_autocmd("BufReadPost", {
 
 -- auto close brackets
 -- this
-api.nvim_create_autocmd(
-  "FileType",
-  { pattern = "man", command = [[nnoremap <buffer><silent> q :quit<CR>]] }
-)
-
--- show cursor line only in active window
-local cursorGrp = api.nvim_create_augroup("CursorLine", { clear = true })
-api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
-  pattern = "*",
-  command = "set cursorline",
-  group = cursorGrp,
-})
-api.nvim_create_autocmd(
-  { "InsertEnter", "WinLeave" },
-  { pattern = "*", command = "set nocursorline", group = cursorGrp }
-)
+autocmd("FileType", { pattern = "man", command = [[nnoremap <buffer><silent> q :quit<CR>]] })
 
 -- Enable spell checking for certain file types
-api.nvim_create_autocmd(
+autocmd(
   { "BufRead", "BufNewFile" },
   -- { pattern = { "*.txt", "*.md", "*.tex" }, command = [[setlocal spell<cr> setlocal spelllang=en,de<cr>]] }
   {
@@ -67,17 +56,9 @@ api.nvim_create_autocmd(
   }
 )
 
--- vim.api.nvim_create_autocmd("ColorScheme", {
---   callback = function()
---     vim.api.nvim_set_hl(0, "FloatBorder", { link = "Normal" })
---     vim.api.nvim_set_hl(0, "LspInfoBorder", { link = "Normal" })
---     vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
---   end,
--- })
-
 -- close some filetypes with <q>
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("close_with_q", { clear = true }),
+autocmd("FileType", {
+  group = augroup("close_with_q", { clear = true }),
   pattern = {
     "PlenaryTestPopup",
     "help",
@@ -103,16 +84,16 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_command("autocmd VimResized * wincmd =")
 
 -- fix terraform and hcl comment string
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("FixTerraformCommentString", { clear = true }),
+autocmd("FileType", {
+  group = augroup("FixTerraformCommentString", { clear = true }),
   callback = function(ev)
     vim.bo[ev.buf].commentstring = "# %s"
   end,
   pattern = { "terraform", "hcl" },
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+autocmd("LspAttach", {
+  group = augroup("lsp-attach", { clear = true }),
   callback = function(event)
     local map = function(keys, func, desc)
       vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
@@ -222,8 +203,159 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
   callback = function()
     pcall(vim.treesitter.start)
+  end,
+})
+
+-- Remove trailing whitespace on save
+autocmd("BufWritePre", {
+  group = general,
+  pattern = "*",
+  callback = function()
+    local save_cursor = vim.fn.getpos(".")
+    vim.cmd([[%s/\s\+$//e]])
+    vim.fn.setpos(".", save_cursor)
+  end,
+  desc = "Remove trailing whitespace",
+})
+
+-- Auto-resize splits when window is resized
+autocmd("VimResized", {
+  group = general,
+  pattern = "*",
+  command = "wincmd =",
+  desc = "Auto-resize splits",
+})
+
+-- Return to last edit position when opening files
+autocmd("BufReadPost", {
+  group = general,
+  pattern = "*",
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    if mark[1] > 0 and mark[1] <= vim.api.nvim_buf_line_count(0) then
+      vim.api.nvim_win_set_cursor(0, mark)
+    end
+  end,
+  desc = "Return to last edit position",
+})
+
+-- Create directories when saving a file if they don't exist
+autocmd("BufWritePre", {
+  group = general,
+  pattern = "*",
+  callback = function(event)
+    if event.match:match("^%w%w+://") then
+      return
+    end
+    local file = vim.loop.fs_realpath(event.match) or event.match
+    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end,
+  desc = "Auto-create directories",
+})
+
+autocmd({ "BufWinEnter" }, {
+  callback = function()
+    vim.cmd("set formatoptions-=cro")
+  end,
+})
+
+autocmd({ "FileType" }, {
+  pattern = {
+    "netrw",
+    "Jaq",
+    "qf",
+    "git",
+    "help",
+    "man",
+    "lspinfo",
+    "oil",
+    "spectre_panel",
+    "lir",
+    "DressingSelect",
+    "tsplayground",
+    "query",
+    "",
+  },
+  callback = function()
+    vim.cmd([[
+      nnoremap <silent> <buffer> q :close<CR>
+      set nobuflisted
+    ]])
+  end,
+})
+
+autocmd({ "CmdWinEnter" }, {
+  callback = function()
+    vim.cmd("quit")
+  end,
+})
+
+autocmd({ "VimResized" }, {
+  callback = function()
+    vim.cmd("tabdo wincmd =")
+  end,
+})
+
+autocmd({ "BufWinEnter" }, {
+  pattern = { "*" },
+  callback = function()
+    vim.cmd("checktime")
+  end,
+})
+
+autocmd({ "BufWinEnter" }, {
+  pattern = { "*" },
+  callback = function()
+    local dirname = vim.fn.getcwd():match("([^/]+)$")
+    vim.opt.titlestring = dirname
+  end,
+})
+
+autocmd({ "TextYankPost" }, {
+  callback = function()
+    vim.hl.on_yank({ higroup = "Visual", timeout = 40 })
+  end,
+})
+
+autocmd({ "FileType" }, {
+  pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})
+
+autocmd({ "CursorHold" }, {
+  callback = function()
+    local status_ok, luasnip = pcall(require, "luasnip")
+    if not status_ok then
+      return
+    end
+    if luasnip.expand_or_jumpable() then
+      -- ask maintainer for option to make this silent
+      -- luasnip.unlink_current()
+      vim.cmd([[silent! lua require("luasnip").unlink_current()]])
+    end
+  end,
+})
+
+autocmd("BufWinLeave", {
+  pattern = "?*", -- Avoid running for unnamed buffers
+  callback = function()
+    if vim.fn.empty(vim.fn.expand("%")) == 0 then -- Check if file has a name
+      vim.cmd("silent! mkview")
+    end
+  end,
+})
+
+autocmd("BufWinEnter", {
+  pattern = "?*", -- Avoid running for unnamed buffers
+  callback = function()
+    if vim.fn.empty(vim.fn.expand("%")) == 0 and vim.fn.filereadable(vim.fn.expand("%:p")) == 1 then
+      vim.cmd("silent! loadview")
+    end
   end,
 })
