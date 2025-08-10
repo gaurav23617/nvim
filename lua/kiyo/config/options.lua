@@ -36,11 +36,10 @@ vim.opt.updatetime = 100 -- faster completion (4000ms default)
 vim.opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
-vim.opt.cursorline = false -- highlight the current line
 vim.opt.number = true -- set numbered lines
 vim.opt.breakindent = true -- wrap lines with indent
 vim.opt.relativenumber = true -- set relative numbered lines
-vim.opt.numberwidth = 4 -- set number column width to 2 {default 4}
+vim.opt.numberwidth = 1 -- set number column width to 2 {default 4}
 vim.opt.signcolumn = "yes:1" --  show the sign column, otherwise it would shift the text each time
 vim.opt.wrap = false -- display lines as one long line
 vim.opt.scrolloff = 8 -- Makes sure there are always eight lines of context
@@ -51,14 +50,7 @@ vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applicati
 vim.opt.title = true -- set the title of window to the value of the titlestring
 vim.opt.confirm = true -- confirm to save changes before exiting modified buffer
 vim.opt.fillchars = { eob = " " } -- change the character at the end of buffer
--- vim.opt.winborder = "rounded" -- solid
 vim.opt.winborder = "single" -- https://neovim.io/doc/user/options.html#'winborder'
-
--- vim.opt.guicursor = ""                          -- set the cursor to be a vertical bar
-
--- vim.opt.cursorlineopt = "number"              -- set the cursorline
--- vim.opt.tabstop = 2                           -- insert 2 spaces for a tab
--- vim.opt.laststatus = 0 -- Always display the status line
 
 vim.filetype.add({
   extension = {
