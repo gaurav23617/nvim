@@ -52,8 +52,8 @@ keymap("v", "<", "<gv", "Indent left")
 keymap("v", ">", ">gv", "Indent right")
 
 -- Paste without yanking
-keymap("v", "p", '"_dp', "Paste without yank")
-keymap("v", "P", '"_dP', "Paste before without yank")
+keymap({ "v", "x" }, "p", "P", "Paste without yank")
+-- keymap("v", "P", '"_dP', "Paste before without yank")
 
 -- Yank inside {}
 keymap("n", "YY", "va{Vy", "Yank inside braces")
@@ -111,9 +111,6 @@ keymap("n", "g#", "g#zz", "Partial search backward")
 -- Cut full line
 keymap("n", "<C-x>", "dd", "Cut line")
 
--- Select all
-keymap("n", "<C-a>", "ggVG", "Select all")
-
 -- New file in same dir
 keymap("n", "<C-n>", ":w %:h/", "Write to new file in dir")
 
@@ -152,3 +149,9 @@ keymap("n", "<leader>pmu", "<cmd>MasonUpdate<CR>", "Mason update")
 -- Change inner word with Enter / Backspace
 keymap("n", "<CR>", "ciw", "Change word (Enter)")
 keymap("n", "<BS>", "ci", "Change inside (Backspace)")
+
+keymap("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+keymap("n", "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
+keymap("n", "<M-t>", "<cmd>silent !tmux neww tmux-sessionizer -s 1<CR>")
+keymap("n", "<M-n>", "<cmd>silent !tmux neww tmux-sessionizer -s 2<CR>")
+keymap("n", "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
