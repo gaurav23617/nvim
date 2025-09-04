@@ -21,6 +21,7 @@ return {
         "biome",
         "nil",
         "nixfmt",
+        "tflint",
 
         -- Formatters (for conform.nvim and general use)
         "stylua",

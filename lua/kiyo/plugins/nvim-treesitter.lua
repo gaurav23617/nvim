@@ -47,6 +47,8 @@ return {
           "java",
           "rust",
           "ron",
+          "terraform",
+          "hcl",
         },
         incremental_selection = {
           enable = true,

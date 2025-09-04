@@ -54,6 +54,11 @@ return {
       -- Other (system tools)
       rust = { "rustfmt" }, -- comes with Rust installation
 
+      hcl = { "packer_fmt" },
+      terraform = { "terraform_fmt" },
+      tf = { "terraform_fmt" },
+      ["terraform-vars"] = { "terraform_fmt" },
+
       -- Additional file types (uncomment as needed)
       -- markdown = { "markdownlint" },
       -- yaml = { "yamllint" },
