@@ -42,15 +42,56 @@ return {
       }
     end
 
-    local function custom_branch()
-      local gitsigns = vim.b.gitsigns_head
-      local fugitive = vim.fn.exists("*FugitiveHead") == 1 and vim.fn.FugitiveHead() or ""
-      local branch = gitsigns or fugitive
-      if branch == nil or branch == "" then
-        return ""
-      else
-        return " " .. branch
+    -- Function to get the root directory name with a fixed color
+    local function root_dir()
+      return {
+        function()
+          local cwd = vim.fn.getcwd()
+          return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
+        end,
+        color = { fg = "#16bc40" },
+      }
+    end
+
+    -- Function to format file paths nicely
+    local function pretty_path()
+      return function()
+        local path = vim.fn.expand("%:p")
+        if path == "" then
+          return ""
+        end
+
+        local cwd = vim.fn.getcwd()
+        if path:find(cwd, 1, true) == 1 then
+          path = path:sub(#cwd + 2)
+        end
+
+        local parts = vim.split(path, "[\\/]")
+        if #parts > 3 then
+          parts = { parts[1], "…", unpack(parts, #parts - 2, #parts) }
+        end
+
+        return table.concat(parts, "/")
       end
+    end
+
+    -- Ensure lazy.status exists before calling it
+    local lazy_updates = function()
+      local ok, lazy_status = pcall(require, "lazy.status")
+      return ok and lazy_status.updates() or ""
+    end
+    local lazy_has_updates = function()
+      local ok, lazy_status = pcall(require, "lazy.status")
+      return ok and lazy_status.has_updates()
+    end
+
+    local lazy_status = require("lazy.status")
+    local noice = require("noice")
+
+    -- Function to display macro recording status
+    local function macro_recording()
+      local recording_register = vim.fn.reg_recording()
+      return recording_register ~= "" and ("Recording @" .. recording_register) or ""
     end
 
     local modes = { "normal", "insert", "visual", "replace", "command", "inactive", "terminal" }
@@ -72,18 +113,32 @@ return {
       lualine_a = {
         {
           "mode",
-          fmt = function(str)
-            return str:sub(1, 1)
-          end,
+          icon = "  ",
           color = function()
-            local mode = vim.fn.mode()
-            if mode == "\22" then
-              return { fg = "none", bg = colors.red, gui = "bold" }
-            elseif mode == "V" then
-              return { fg = colors.red, bg = "none", gui = "underline,bold" }
-            else
-              return { fg = colors.red, bg = "none", gui = "bold" }
-            end
+            local mode_color = {
+              n = colors.blue, -- normal
+              i = colors.green, -- insert
+              v = colors.mauve, -- visual
+              [""] = colors.red, -- visual block (ctrl-v)
+              V = colors.yellow, -- visual line
+              c = colors.peach, -- command
+              no = colors.blue, -- operator pending
+              s = colors.teal, -- select
+              S = colors.teal, -- select line
+              [""] = colors.teal, -- select block
+              ic = colors.green, -- insert command
+              R = colors.red, -- replace
+              Rv = colors.red, -- virtual replace
+              cv = colors.peach, -- vim ex
+              ce = colors.peach, -- normal ex
+              r = colors.red, -- hit enter prompt
+              rm = colors.sky, -- more prompt
+              ["r?"] = colors.sky, -- confirm query
+              ["!"] = colors.flamingo, -- shell
+              t = colors.lavender, -- terminal
+            }
+
+            return { fg = mode_color[vim.fn.mode()] or colors.text, bg = "none", gui = "bold" }
           end,
           padding = { left = 0, right = 0 },
         },
@@ -91,9 +146,8 @@ return {
       lualine_b = {
         separator(),
         {
-          custom_branch,
-          color = { fg = colors.green, bg = "none", gui = "bold" },
-          padding = { left = 0, right = 0 },
+          "branch",
+          color = { bg = "none" },
         },
         {
           "diff",
@@ -110,49 +164,32 @@ return {
       },
       lualine_c = {
         separator(),
-        {
-          "filetype",
-          icon_only = true,
-          colored = false,
-          color = { fg = colors.blue, bg = "none", gui = "bold" },
-          padding = { left = 0, right = 1 },
-        },
-        {
-          "filename",
-          file_status = true,
-          path = 0,
-          shorting_target = 20,
-          symbols = {
-            modified = "[+]",
-            readonly = "[-]",
-            unnamed = "[?]",
-            newfile = "[!]",
-          },
-          color = { fg = colors.blue, bg = "none", gui = "bold" },
-          padding = { left = 0, right = 0 },
-        },
-        separator(),
-        {
-          function()
-            local bufnr_list = vim.fn.getbufinfo({ buflisted = 1 })
-            local total = #bufnr_list
-            local current_bufnr = vim.api.nvim_get_current_buf()
-            local current_index = 0
-
-            for i, buf in ipairs(bufnr_list) do
-              if buf.bufnr == current_bufnr then
-                current_index = i
-                break
-              end
-            end
-
-            return string.format(" %d/%d", current_index, total)
-          end,
-          color = { fg = colors.yellow, bg = "none", gui = "bold" },
-          padding = { left = 0, right = 0 },
-        },
+        root_dir(),
+        { "filetype", icon_only = true, separator = "", padding = { left = 0, right = 0 } },
+        { pretty_path() },
       },
       lualine_x = {
+        {
+          function()
+            return noice.api.status.command.get()
+          end,
+          cond = function()
+            return noice.api.status.command.has()
+          end,
+          color = { fg = "#cdd6f4" },
+        },
+        {
+          macro_recording,
+          cond = function()
+            return vim.fn.reg_recording() ~= ""
+          end,
+          color = { fg = "#ff0000" },
+        },
+        {
+          lazy_updates,
+          cond = lazy_has_updates,
+          color = { fg = "#ff9e64" },
+        },
         {
           "fileformat",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
@@ -167,27 +204,6 @@ return {
           "encoding",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
           padding = { left = 1, right = 0 },
-        },
-        separator(),
-        {
-          function()
-            local size = vim.fn.getfsize(vim.api.nvim_buf_get_name(0))
-            if size < 0 then
-              return "-"
-            else
-              if size < 1024 then
-                return size .. "B"
-              elseif size < 1024 * 1024 then
-                return string.format("%.1fK", size / 1024)
-              elseif size < 1024 * 1024 * 1024 then
-                return string.format("%.1fM", size / (1024 * 1024))
-              else
-                return string.format("%.1fG", size / (1024 * 1024 * 1024))
-              end
-            end
-          end,
-          color = { fg = colors.blue, bg = "none", gui = "bold" },
-          padding = { left = 0, right = 0 },
         },
       },
       lualine_y = {
