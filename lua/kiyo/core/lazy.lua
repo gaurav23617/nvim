@@ -12,7 +12,11 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({ import = "kiyo.plugins" }, {
+require("lazy").setup({
+  { import = "kiyo.plugins" },
+  { import = "kiyo.plugins.blink" },
+  { import = "kiyo.plugins.snacks" },
+}, {
   install = {
     missing = true,
     colorscheme = { "catppuccin" },
