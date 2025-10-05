@@ -20,10 +20,8 @@ return {
     formatters_by_ft = {
       -- Go
       go = { "goimports", "gofmt" },
-
       -- Lua
       lua = { "stylua" },
-
       -- Web technologies - Using biome for JS/TS/JSON
       javascript = { "biome" },
       typescript = { "biome" },
@@ -32,36 +30,26 @@ return {
       json = { "biome" },
       jsonc = { "biome" },
       nix = { "nixfmt" },
-
       -- Other webtechnologies that biome doesn't support
       yaml = { "prettier" },
       markdown = { "prettier" },
       html = { "prettier" },
       css = { "prettier" },
       scss = { "prettier" },
-
       -- Python
       python = { "isort", "black" },
-
       -- PHP/Laravel
       php = { "pint" },
       blade = { "blade-formatter" },
-
       -- Shell
       sh = { "shfmt" },
       bash = { "shfmt" },
-
       -- Other (system tools)
-      rust = { "rustfmt" }, -- comes with Rust installation
-
+      rust = { "rustfmt" },
       hcl = { "packer_fmt" },
       terraform = { "terraform_fmt" },
       tf = { "terraform_fmt" },
       ["terraform-vars"] = { "terraform_fmt" },
-
-      -- Additional file types (uncomment as needed)
-      -- markdown = { "markdownlint" },
-      -- yaml = { "yamllint" },
       -- toml = { "taplo" },
     },
     formatters = {
@@ -74,12 +62,15 @@ return {
           end
           return "biome"
         end,
-        args = { "format", "--stdin-file-path", "$FILENAME" },
+        args = {
+          "format",
+          -- "--config-path",
+          vim.fn.expand("~/.config/nvim/rules/biome.jsonc"),
+          "--stdin-file-path",
+          "$FILENAME",
+        },
         stdin = true,
       },
-    },
-    default_format_opts = {
-      lsp_format = "fallback",
     },
     format_on_save = {
       timeout_ms = 1000,
