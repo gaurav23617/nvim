@@ -49,6 +49,7 @@ return {
           "ron",
           "terraform",
           "hcl",
+          "nu",
         },
         incremental_selection = {
           enable = true,
