@@ -44,6 +44,26 @@
 -- It's essentially the "foundation" that makes your entire Mason-based toolchain
 -- work reliably by ensuring the right tools are found in the right order.
 
+local home = os.getenv("HOME")
+local nix_profile_path = home .. "/.nix-profile/bin"
+local is_nix_system = vim.fn.isdirectory(nix_profile_path) == 1
+
+-- If a Nix profile is found, DO NOTHING.
+-- We want Neovim to use the Nix-provided tools from the PATH
+-- set in init.lua.
+if is_nix_system then
+  vim.notify("Nix profile detected. Mason will use system PATH.", vim.log.levels.INFO)
+  return
+end
+
+--
+-- IF NO NIX PROFILE IS FOUND (e.g., non-Nix machine):
+--
+-- Fall back to the original behavior: prepend Mason's own bin directory
+-- to ensure Mason-installed tools are used.
+--
+vim.notify("No Nix profile. Prepending Mason bin to PATH.", vim.log.levels.WARN)
+
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 local current_path = vim.env.PATH or ""
 

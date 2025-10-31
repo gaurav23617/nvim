@@ -29,7 +29,7 @@ return {
       typescriptreact = { "biome" },
       json = { "biome" },
       jsonc = { "biome" },
-      nix = { "nixfmt" },
+      nix = { "nixfmt-rfc-style" }, -- CHANGED: Was "nixfmt"
       -- Other webtechnologies that biome doesn't support
       yaml = { "prettier" },
       markdown = { "prettier" },

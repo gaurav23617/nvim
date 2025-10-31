@@ -1,59 +1,55 @@
 return {
   {
     "mason-org/mason.nvim",
-    -- lazy = false, -- Load immediately to ensure PATH is set
     cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
         -- LSP servers (matching your vim.lsp.enable() config)
-        "lua-language-server", -- Lua LSP
-        "gopls", -- Go LSP
-        "zls", -- Zig LSP
-        "typescript-language-server", -- TypeScript LSP
-        "rust-analyzer", -- Rust LSP
-        "intelephense", -- PHP LSP
-        "tailwindcss-language-server", -- Tailwind CSS LSP
-        "html-lsp", -- HTML LSP
-        "css-lsp", -- CSS LSP
-        "vue-language-server", -- Vue LSP
+        "lua-language-server",
+        "gopls",
+        "zls",
+        "typescript-language-server",
+        "rust-analyzer",
+        "intelephense",
+        "tailwindcss-language-server",
+        "html-lsp",
+        "css-lsp",
+        "vue-language-server",
         "biome",
-        "nil",
-        "nixfmt",
+        "nixd", -- CHANGED: Was "nil"
+        "nixfmt-rfc-style", -- CHANGED: Was "nixfmt"
         "tflint",
 
-        -- Formatters (for conform.nvim and general use)
+        -- Formatters
         "stylua",
         "goimports",
-        -- Note: gofmt comes with Go installation, not managed by Mason
         "prettier",
-        -- "black",
-        -- "isort",
         "blade-formatter",
 
         -- Linters and diagnostics
         "golangci-lint",
         "eslint_d",
-        "luacheck", -- Lua linting
-        "pint", -- Laravel Pint for PHP (formatting & linting)
+        "luacheck",
+        "pint",
 
         -- Additional useful tools
-        "delve", -- Go debugger
-        "shfmt", -- Shell formatter
-        "shellcheck", -- Shell linter
-
-        -- Optional but useful additions
-        -- "markdownlint", -- Markdown linting
-        -- "yamllint",     -- YAML linting
-        -- "jsonlint",     -- JSON linting
+        "delve",
+        "shfmt",
+        "shellcheck",
       },
     },
     config = function(_, opts)
-      -- PATH is handled by core.mason-path for consistency
+      -- Add providers for Nix-first, Mason-fallback hybrid mode
+      opts.providers = {
+        "mason.providers.client", -- Checks system PATH (for Nix tools)
+        "mason.providers.package", -- The default Mason installer (as a fallback)
+      }
+
       require("mason").setup(opts)
 
-      -- Auto-install ensure_installed tools with better error handling
+      -- Auto-install logic (unchanged)
       local mr = require("mason-registry")
       local function ensure_installed()
         for _, tool in ipairs(opts.ensure_installed) do

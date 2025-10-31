@@ -1,29 +1,39 @@
--- Mason verification utility
+-- "Smart" Mason verification utility
 local M = {}
 
--- Check if a tool is managed by Mason
-function M.is_mason_tool(tool_name)
-  local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/" .. tool_name
-  return vim.fn.executable(mason_bin) == 1
-end
+local home = os.getenv("HOME")
+local nix_profile_path = home .. "/.nix-profile/bin"
+local is_nix_system = vim.fn.isdirectory(nix_profile_path) == 1
 
--- Get the path of a tool
 function M.get_tool_path(tool_name)
   return vim.fn.exepath(tool_name)
 end
 
--- Check all tools and report which are Mason-managed
+-- Check all tools and report which are Mason-managed or Nix-managed
 function M.verify_tools()
   -- Debug: Show current PATH
-  print("Current Neovim PATH (first 3 entries):")
+  print("Current Neovim PATH (first 5 entries):")
   local path_entries = vim.split(vim.env.PATH, ":")
-  for i = 1, math.min(3, #path_entries) do
-    local marker = (string.find(path_entries[i], "mason") and "🔧" or "  ")
+  for i = 1, math.min(5, #path_entries) do
+    local marker = "  "
+    if string.find(path_entries[i], "mason") then
+      marker = "🔧"
+    elseif string.find(path_entries[i], "nix") then
+      marker = "❄️ "
+    end
     print(string.format("%s %d: %s", marker, i, path_entries[i]))
   end
   print("")
-  local mason_tools = {
-    -- LSP Servers (Mason-managed)
+
+  if is_nix_system then
+    print("❄️  Nix environment detected. Tools should come from Nix.")
+  else
+    print("🔧 No Nix environment. Tools should come from Mason.")
+  end
+
+  -- List of *all* tools, regardless of source
+  local all_tools = {
+    -- LSPs
     "gopls",
     "lua-language-server",
     "rust-analyzer",
@@ -31,8 +41,14 @@ function M.verify_tools()
     "intelephense",
     "zls",
     "biome",
+    "nixd", -- Nix-specific LSP
+    "tailwindcss-language-server",
+    "html-lsp",
+    "css-lsp",
+    "vue-language-server",
+    "tflint",
 
-    -- Formatters (Mason-managed)
+    -- Formatters
     "stylua",
     "prettier",
     "goimports",
@@ -41,112 +57,83 @@ function M.verify_tools()
     "shfmt",
     "blade-formatter",
     "pint",
+    "nixfmt-rfc-style", -- Nix-specific formatter
 
-    -- Linters (Mason-managed)
+    -- Linters
     "golangci-lint",
     "eslint_d",
     "luacheck",
     "shellcheck",
-  }
 
-  local system_tools = {
-    -- System tools (not managed by Mason)
-    "gofmt", -- Comes with Go installation
-    "rustfmt", -- Comes with Rust installation
+    -- System Tools (dependencies)
+    "gofmt",
+    "rustfmt",
+    "cargo",
+    "composer",
+    "luarocks",
   }
 
   print(
     "═══════════════════════════════════"
   )
-  print("         MASON TOOL VERIFICATION    ")
+  print("         TOOL VERIFICATION          ")
   print(
     "═══════════════════════════════════"
   )
 
-  print("\n📦 MASON-MANAGED TOOLS:")
-  local mason_found = 0
-  local mason_total = 0
+  print("\n📦 TOOLS & DEPENDENCIES:")
+  local nix_tools_found = 0
+  local mason_tools_found = 0
+  local system_tools_found = 0
+  local not_found_tools = 0
 
-  for _, tool in ipairs(mason_tools) do
-    mason_total = mason_total + 1
+  for _, tool in ipairs(all_tools) do
     if vim.fn.executable(tool) == 1 then
       local path = M.get_tool_path(tool)
-      local is_mason = string.find(path, "mason", 1, true) ~= nil
-      local status = is_mason and "✅ MASON" or "❌ SYSTEM"
-
-      if is_mason then
-        mason_found = mason_found + 1
+      local status = ""
+      if string.find(path, "nix", 1, true) then
+        status = "✅ NIX"
+        nix_tools_found = nix_tools_found + 1
+      elseif string.find(path, "mason", 1, true) then
+        status = is_nix_system and "⚠️  MASON (Conflict)" or "✅ MASON"
+        mason_tools_found = mason_tools_found + 1
+      else
+        status = "✅ SYSTEM"
+        system_tools_found = system_tools_found + 1
       end
-
       print(string.format("%-25s %s", tool, status))
-      if not is_mason then
-        print(string.format("  └─ %s", path))
-      end
     else
       print(string.format("%-25s ❌ NOT FOUND", tool))
-    end
-  end
-
-  print("\n🔧 SYSTEM TOOLS (Not managed by Mason):")
-  for _, tool in ipairs(system_tools) do
-    if vim.fn.executable(tool) == 1 then
-      local path = M.get_tool_path(tool)
-      print(string.format("%-25s ✅ SYSTEM", tool))
-    else
-      print(string.format("%-25s ❌ NOT FOUND", tool))
+      not_found_tools = not_found_tools + 1
     end
   end
 
   print(
     "\n═══════════════════════════════════"
   )
-  print(string.format("Mason-managed: %d/%d tools", mason_found, mason_total))
+  print(string.format("❄️  Nix Tools: %d", nix_tools_found))
+  print(string.format("🔧 Mason Tools: %d", mason_tools_found))
+  print(string.format("🔩 System Tools: %d", system_tools_found))
+  print(string.format("❌ Not Found: %d", not_found_tools))
+  print("")
 
-  if mason_found == mason_total then
-    print("🎉 All Mason tools are properly managed!")
+  if is_nix_system and mason_tools_found > 0 then
+    print("⚠️  You have tools installed by Mason that conflict with your Nix setup.")
+    print("💡 Run :Mason uninstall <package> and let Nix manage it.")
+  elseif not is_nix_system and not_found_tools > 0 then
+    print("⚠️  Some tools are missing. Run :Mason to install them.")
+  elseif is_nix_system and not_found_tools > 0 then
+    print("⚠️  Some tools are missing. Add them to your Home Manager config.")
   else
-    print("⚠️  Some Mason tools are using system versions")
-    print("💡 Try restarting Neovim or run :MasonUpdate")
+    print("🎉 All tools are correctly managed!")
   end
-end
-
--- Function to fix PATH manually
-function M.fix_path()
-  local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-  local current_path = vim.env.PATH or ""
-
-  -- Remove any existing Mason bin entries to prevent duplicates
-  local path_entries = vim.split(current_path, ":")
-  local clean_path_entries = {}
-  local mason_found = false
-
-  for _, entry in ipairs(path_entries) do
-    if entry == mason_bin then
-      mason_found = true
-    else
-      table.insert(clean_path_entries, entry)
-    end
-  end
-
-  -- Add Mason bin directory at the beginning
-  local new_path = mason_bin .. ":" .. table.concat(clean_path_entries, ":")
-  vim.env.PATH = new_path
-
-  if mason_found then
-    print("🔄 Cleaned duplicate Mason entries from PATH")
-  else
-    print("✅ Added Mason bin to PATH: " .. mason_bin)
-  end
-
-  -- Note: Neovim will automatically refresh executable paths
-  print("🔄 PATH updated - executable paths will refresh automatically")
 end
 
 -- Create commands
 vim.api.nvim_create_user_command(
   "MasonVerify",
   M.verify_tools,
-  { desc = "Verify Mason tool management" }
+  { desc = "Verify Mason & Nix tool management" }
 )
 vim.api.nvim_create_user_command("MasonFixPath", M.fix_path, { desc = "Fix Mason PATH manually" })
 
