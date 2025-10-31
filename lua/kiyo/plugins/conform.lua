@@ -52,26 +52,6 @@ return {
       ["terraform-vars"] = { "terraform_fmt" },
       -- toml = { "taplo" },
     },
-    formatters = {
-      -- Custom biome formatter configuration
-      biome = {
-        command = function()
-          local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/biome"
-          if vim.fn.executable(mason_bin) == 1 then
-            return mason_bin
-          end
-          return "biome"
-        end,
-        args = {
-          "format",
-          -- "--config-path",
-          vim.fn.expand("~/.config/nvim/rules/biome.jsonc"),
-          "--stdin-file-path",
-          "$FILENAME",
-        },
-        stdin = true,
-      },
-    },
     format_on_save = {
       timeout_ms = 1000,
       lsp_format = "fallback",
