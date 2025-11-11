@@ -20,6 +20,14 @@ return {
           path = "~/personal/obsidian/brain-log",
         },
         {
+          name = "projects",
+          path = "~/personal/projects",
+        },
+        {
+          name = "playground",
+          path = "~/personal/playground",
+        },
+        {
           name = "workspace",
           path = "~/workspace",
         },
