@@ -1,7 +1,10 @@
+if true then
+  return {}
+end
 return {
   "folke/snacks.nvim",
   opts = {
-    explorer = {},
+    explorer = { false },
     picker = {
       sources = {
         explorer = {
