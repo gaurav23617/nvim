@@ -75,6 +75,92 @@ return {
       end
     end
 
+    local function getLspName()
+      local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
+      local buf_ft = vim.bo.filetype
+
+      local lsp_clients = {}
+      local linters = {}
+      local formatters = {}
+      local exclude_list = { "null-ls", "copilot", "GitHub Copilot" }
+
+      -- Get LSP clients
+      for _, client in pairs(buf_clients) do
+        local should_exclude = false
+        for _, excluded in ipairs(exclude_list) do
+          if client.name:lower():find(excluded:lower()) then
+            should_exclude = true
+            break
+          end
+        end
+
+        if not should_exclude then
+          table.insert(lsp_clients, client.name)
+        end
+      end
+
+      -- Get configured linters
+      local lint_ok, lint = pcall(require, "lint")
+      if lint_ok and lint.linters_by_ft and lint.linters_by_ft[buf_ft] then
+        local buf_linters = lint.linters_by_ft[buf_ft]
+        if type(buf_linters) == "table" then
+          for _, linter in ipairs(buf_linters) do
+            table.insert(linters, linter)
+          end
+        elseif type(buf_linters) == "string" then
+          table.insert(linters, buf_linters)
+        end
+      end
+
+      -- Get configured formatters
+      local conform_ok, conform = pcall(require, "conform")
+      if conform_ok and conform.formatters_by_ft and conform.formatters_by_ft[buf_ft] then
+        local buf_formatters = conform.formatters_by_ft[buf_ft]
+        if type(buf_formatters) == "table" then
+          for _, formatter in ipairs(buf_formatters) do
+            if type(formatter) == "string" then
+              table.insert(formatters, formatter)
+            end
+          end
+        end
+      end
+
+      -- Build the display string with colors and reduced spacing
+      local parts = {}
+
+      if #lsp_clients > 0 then
+        table.insert(parts, "%#LualineLspColor# " .. table.concat(lsp_clients, ", "))
+      end
+
+      if #formatters > 0 then
+        table.insert(parts, "%#LualineFormatterColor# " .. table.concat(formatters, ", "))
+      end
+
+      if #linters > 0 then
+        table.insert(parts, "%#LualineLinterColor# " .. table.concat(linters, ", "))
+      end
+
+      if #parts == 0 then
+        return "%#LualineLspColor# No servers"
+      end
+
+      -- Join with single space instead of double space
+      return table.concat(parts, " ")
+    end
+
+    -- Define custom highlight groups
+    vim.api.nvim_set_hl(0, "LualineLspColor", { fg = colors.blue, bg = "NONE", bold = true })
+    vim.api.nvim_set_hl(0, "LualineFormatterColor", { fg = colors.peach, bg = "NONE", bold = true })
+    vim.api.nvim_set_hl(0, "LualineLinterColor", { fg = colors.yellow, bg = "NONE", bold = true })
+
+    local lsp = {
+      function()
+        return getLspName()
+      end,
+      color = { bg = "none" },
+      padding = { left = 0, right = 0 },
+    }
+
     -- Ensure lazy.status exists before calling it
     local lazy_updates = function()
       local ok, lazy_status = pcall(require, "lazy.status")
@@ -170,15 +256,6 @@ return {
       },
       lualine_x = {
         {
-          function()
-            return noice.api.status.command.get()
-          end,
-          cond = function()
-            return noice.api.status.command.has()
-          end,
-          color = { fg = "#cdd6f4" },
-        },
-        {
           macro_recording,
           cond = function()
             return vim.fn.reg_recording() ~= ""
@@ -186,25 +263,51 @@ return {
           color = { fg = "#ff0000" },
         },
         {
+          function()
+            return "│"
+          end,
+          cond = function()
+            return vim.fn.reg_recording() ~= ""
+          end,
+          color = { fg = colors.surface0, bg = "NONE", gui = "bold" },
+          padding = { left = 0, right = 1 },
+        },
+        {
           lazy_updates,
           cond = lazy_has_updates,
           color = { fg = "#ff9e64" },
         },
         {
+          cond = lazy_has_updates,
+          color = { fg = colors.surface0, bg = "NONE", gui = "bold" },
+          padding = { left = 1, right = 1 },
+          function()
+            return "│"
+          end,
+        },
+        {
           "fileformat",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
           symbols = {
-            unix = "",
-            dos = "",
-            mac = "",
+            unix = "",
+            dos = "",
+            mac = "",
           },
           padding = { left = 0, right = 0 },
         },
         {
           "encoding",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
-          padding = { left = 1, right = 0 },
+          padding = { left = 1, right = 1 },
         },
+        {
+          function()
+            return "│"
+          end,
+          color = { fg = colors.surface0, bg = "NONE", gui = "bold" },
+          padding = { left = 0, right = 0 },
+        },
+        lsp,
       },
       lualine_y = {
         separator(),
