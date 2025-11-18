@@ -30,7 +30,10 @@ return {
         },
         hide_hidden = true, -- only works on Windows for hidden files/directories
         hide_by_name = {
-          --"node_modules"
+          "node_modules",
+          ".next",
+          ".git",
+          ".direnv",
         },
         hide_by_pattern = { -- uses glob style patterns
           --"*.meta",
@@ -106,6 +109,7 @@ return {
       { event = events.FILE_MOVED, handler = on_move },
       { event = events.FILE_RENAMED, handler = on_move },
     })
+    opts.nesting_rules = require("neotree-file-nesting-config").nesting_rules
     require("neo-tree").setup(opts)
     vim.api.nvim_create_autocmd("TermClose", {
       pattern = "*lazygit",
