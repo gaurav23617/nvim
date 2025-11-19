@@ -18,51 +18,49 @@ return {
       follow_current_file = { enabled = true },
       use_libuv_file_watcher = true,
       filtered_items = {
-        visible = true, -- when true, they will just be displayed differently than normal items
-        hide_dotfiles = true,
+        visible = true,
+        hide_dotfiles = false,
         hide_gitignored = true,
-        hide_ignored = true, -- hide files that are ignored by other gitignore-like files
-        -- other gitignore-like files, in descending order of precedence.
-        ignore_files = {
-          ".neotreeignore",
-          ".ignore",
-          -- ".rgignore"
-        },
-        hide_hidden = true, -- only works on Windows for hidden files/directories
-        hide_by_name = {
-          "node_modules",
-          ".next",
-          ".git",
-          ".direnv",
-        },
-        hide_by_pattern = { -- uses glob style patterns
-          --"*.meta",
-          --"*/src/*/tsconfig.json",
-        },
-        always_show = { -- remains visible even if other settings would normally hide it
+        hide_ignored = true,
+        hide_hidden = true,
+        hide_by_name = {}, -- Empty by default, so nothing is hidden
+        hide_by_pattern = {},
+        always_show = {
           ".gitignored",
           ".gitignore",
           ".github",
         },
-        always_show_by_pattern = { -- uses glob style patterns
+        always_show_by_pattern = {
           ".env*",
         },
-        never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
+        never_show = {
           ".DS_Store",
-          --"thumbs.db"
         },
-        never_show_by_pattern = { -- uses glob style patterns
-          --".null-ls_*",
-        },
+        never_show_by_pattern = {},
       },
     },
     window = {
       position = "right",
       width = 32,
       mappings = {
-        ["l"] = "open",
-        ["h"] = "close_node",
+        ["l"] = function(state)
+          local node = state.tree:get_node()
+          if node.type == "directory" or (node:has_children() and not node:is_expanded()) then
+            require("neo-tree.sources.filesystem.commands").toggle_node(state)
+          else
+            require("neo-tree.sources.common.commands").open(state)
+          end
+        end,
+        ["h"] = function(state)
+          local node = state.tree:get_node()
+          if node:is_expanded() then
+            require("neo-tree.sources.filesystem.commands").toggle_node(state)
+          else
+            require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+          end
+        end,
         ["<space>"] = "none",
+        ["H"] = "toggle_hidden", -- Toggle dotfiles and gitignored files
         ["Y"] = {
           function(state)
             local node = state.tree:get_node()
