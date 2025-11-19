@@ -289,9 +289,9 @@ return {
           "fileformat",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
           symbols = {
-            unix = "",
-            dos = "",
-            mac = "",
+            unix = "",
+            dos = "",
+            mac = "",
           },
           padding = { left = 0, right = 0 },
         },
