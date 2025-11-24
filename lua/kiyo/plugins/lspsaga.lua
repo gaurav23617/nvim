@@ -37,7 +37,46 @@ return {
   keys = {
     { "n", "gd", "<cmd>Lspsaga goto_definition<CR>" },
     { "n", "<leader>ln", "<cmd>Lspsaga rename ++project<CR>" },
-    { "n", "K", "<cmd>Lspsaga hover_doc<CR>" },
     { "n", "t", "<cmd>Lspsaga term_toggle" },
+    {
+      "m",
+      "<Plug>(lsp)",
+    },
+    {
+      "n",
+      "K",
+      "<cmd>Lspsaga hover_doc<cr>",
+      desc = "Show hover documentation",
+    },
+    {
+      "<Plug>(lsp)a",
+      "<cmd>Lspsaga code_action<cr>",
+      desc = "Code action",
+    },
+    {
+      "<Plug>(lsp)d",
+      "<cmd>Lspsaga show_cursor_diagnostics<cr>",
+      desc = "Show diagnostics at cursor",
+    },
+    {
+      "<Plug>(lsp)D",
+      "<cmd>Lspsaga show_workspace_diagnostics<cr>",
+      desc = "Show diagnostics in workspace",
+    },
+    {
+      ";e",
+      "<cmd>Lspsaga diagnostic_jump_next<cr>",
+      desc = "Jump to next diagnostic",
+    },
+    {
+      ";E",
+      "<cmd>Lspsaga diagnostic_jump_prev<cr>",
+      desc = "Jump to previous diagnostic",
+    },
+    {
+      "<Plug>(lsp)rn",
+      "<cmd>Lspsaga rename<cr>",
+      desc = "Rename",
+    },
   },
 }
