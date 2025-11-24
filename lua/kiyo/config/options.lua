@@ -1,6 +1,10 @@
 vim.g.mapleader = " " -- change leader to a space
 vim.g.maplocalleader = " " -- change localleader to a space
 
+vim.encoding = "utf-8"
+vim.fileencoding = "utf-8"
+vim.opt.encoding = "utf-8"
+
 vim.loader.enable() -- Lua module bytecode cache (replaces impatient)
 -- Disable language providers you don't use
 vim.g.loaded_python3_provider = 0
@@ -34,15 +38,23 @@ vim.opt.timeoutlen = 1000 -- time to wait for a mapped sequence to complete (in 
 vim.opt.undofile = true -- enable persistent undo
 vim.opt.updatetime = 100 -- faster completion (4000ms default)
 vim.opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
-vim.opt.expandtab = true -- convert tabs to spaces
+
+-- Tab, Indent
+vim.opt.tabstop = 2
+vim.opt.smarttab = true
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
-vim.opt.number = true -- set numbered lines
+vim.opt.smartindent = true
 vim.opt.breakindent = true -- wrap lines with indent
+vim.opt.autoindent = true
+vim.opt.expandtab = true -- convert tabs to spaces
+
+vim.opt.number = true -- set numbered lines
 vim.opt.relativenumber = true -- set relative numbered lines
 vim.opt.numberwidth = 1 -- set number column width to 2 {default 4}
 vim.opt.signcolumn = "yes:1" --  show the sign column, otherwise it would shift the text each time
 vim.opt.wrap = true -- display lines as one long line
 vim.opt.textwidth = 120 -- display lines as 120
+vim.opt.scroll = 10
 vim.opt.scrolloff = 8 -- Makes sure there are always eight lines of context
 -- vim.opt.sidescrolloff = 8                               -- Makes sure there are always eight lines of context
 vim.opt.showcmd = false -- Don't show the command in the last line
@@ -50,19 +62,11 @@ vim.opt.ruler = true -- Don't show the ruler
 vim.opt.guifont = "monospace:h17" -- the font used in graphical neovim applications
 vim.opt.title = true -- set the title of window to the value of the titlestring
 vim.opt.confirm = true -- confirm to save changes before exiting modified buffer
-vim.opt.fillchars = { eob = " " } -- change the character at the end of buffer
 vim.opt.winborder = "single" -- https://neovim.io/doc/user/options.html#'winborder'
 
-vim.filetype.add({
-  extension = {
-    env = "dotenv",
-  },
-  filename = {
-    [".env"] = "dotenv",
-    ["env"] = "dotenv",
-  },
-  pattern = {
-    ["[jt]sconfig.*.json"] = "jsonc",
-    ["%.env%.[%w_.-]+"] = "dotenv",
-  },
-})
+-- Fold
+vim.opt.foldcolumn = "1"
+vim.opt.foldenable = true
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
