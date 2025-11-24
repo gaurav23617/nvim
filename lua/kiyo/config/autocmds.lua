@@ -20,6 +20,26 @@ autocmd("Filetype", {
   end,
 })
 
+local project_utils = require("kiyo.utils.project-utils")
+project_utils.setup_commands()
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("project-detection", { clear = true }),
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "*.jsonc" },
+  once = true, -- Only show once per session
+  callback = function()
+    local dirname = vim.fn.expand("%:p:h")
+    local formatter = project_utils.detect_js_formatter(dirname)
+    local linter = project_utils.detect_js_linter(dirname)
+
+    vim.notify(
+      string.format("Project detected - Formatter: %s, Linter: %s", formatter, linter),
+      vim.log.levels.INFO,
+      { title = "Project Config" }
+    )
+  end,
+})
+
 -- Highlight on yank
 autocmd("TextYankPost", {
   callback = function()

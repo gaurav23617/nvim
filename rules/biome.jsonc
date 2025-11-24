@@ -59,17 +59,7 @@
     "parser": { "allowComments": true }
   },
   "files": {
-    "ignore": [
-      "**/dist",
-      "**/node_modules",
-      "**/package.lock",
-      "**/bun.lockb"
-    ]
-  },
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
+    "includes": ["**", "!**/dist", "!**/node_modules", "!**/.expo/", "!**/package-lock.json", "!**/bun.lock"]
   },
   "overrides": [
     {
