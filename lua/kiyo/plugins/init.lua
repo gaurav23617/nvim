@@ -137,9 +137,9 @@ return {
   --   "tpope/vim-sleuth",
   -- },
   -- editor config support
-  -- {
-  --   "editorconfig/editorconfig-vim",
-  -- },
+  {
+    "editorconfig/editorconfig-vim",
+  },
   {
     "smjonas/inc-rename.nvim",
     cmd = "IncRename",
