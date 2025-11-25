@@ -5,10 +5,11 @@ return {
   priority = 500, -- Ensure it loads before other plugins
   opts = {
     flavour = "mocha", -- latte, frappe, macchiato, mocha
-    background = {
+    background = { -- :h background
       light = "latte",
       dark = "mocha",
     },
+    transparent_background = true, -- disables setting the background color.
     integrations = {
       aerial = true,
       cmp = true,
@@ -33,9 +34,11 @@ return {
           warnings = { "undercurl" },
           information = { "undercurl" },
         },
+        virtual_text = {errors = "italic", hints = "italic", warnings = "italic", information = "italic"},
       },
       navic = { enabled = true, custom_bg = "lualine" },
       neotest = true,
+      neotree = true,
       noice = true,
       notify = true,
       semantic_tokens = true,
@@ -45,7 +48,8 @@ return {
       which_key = true,
     },
   },
-  config = function()
-    vim.cmd.colorscheme("catppuccin") -- Apply the colorscheme
+  config = function(_, opts)
+    require("catppuccin").setup(opts) -- pass the opts to the plugin
+    vim.cmd.colorscheme("catppuccin") -- apply the colorscheme
   end,
 }

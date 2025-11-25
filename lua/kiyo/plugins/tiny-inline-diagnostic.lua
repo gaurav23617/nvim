@@ -12,8 +12,8 @@ return {
         -- "ghost", "simple", "nonerdfont", "amongus"
         preset = "classic",
 
-        transparent_bg = false, -- Set the background of the diagnostic to transparent
-        transparent_cursorline = false, -- Set the background of the cursorline to transparent (only one the first diagnostic)
+        transparent_bg = true, -- Set the background of the diagnostic to transparent
+        transparent_cursorline = true, -- Set the background of the cursorline to transparent (only one the first diagnostic)
 
         hi = {
           error = "DiagnosticError", -- Highlight group for error messages

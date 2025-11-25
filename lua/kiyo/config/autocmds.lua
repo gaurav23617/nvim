@@ -20,6 +20,14 @@ autocmd("Filetype", {
   end,
 })
 
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_hl(0, "SnacksPicker", { bg = "none", nocombine = true })
+    vim.api.nvim_set_hl(0, "SnacksPickerBorder", { bg = "none", nocombine = true })
+  end,
+})
+
 local project_utils = require("kiyo.utils.project-utils")
 project_utils.setup_commands()
 
