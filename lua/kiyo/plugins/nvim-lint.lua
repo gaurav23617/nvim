@@ -80,6 +80,24 @@ return {
       end,
     }
 
+    -- Configure statix linter for Nix
+    lint.linters.statix = {
+      cmd = "statix",
+      stdin = false,
+      args = { "check", "--format=errfmt", "--stdin" },
+      stream = "stderr",
+      ignore_exitcode = true,
+      parser = require("lint.parser").from_errorformat("%f>%l:%c:%t:%n:%m", {
+        source = "statix",
+        severity = {
+          W = vim.diagnostic.severity.WARN,
+          E = vim.diagnostic.severity.ERROR,
+          I = vim.diagnostic.severity.INFO,
+          H = vim.diagnostic.severity.HINT,
+        },
+      }),
+    }
+
     -- Configure ESLint linter
     lint.linters.eslint_d = {
       cmd = "eslint_d",
@@ -164,7 +182,8 @@ return {
       go = { "golangcilint" },
 
       -- Lua
-      lua = { "luacheck" },
+      lua = { "selene" },
+      nix = { "statix" },
 
       -- Shell
       sh = { "shellcheck" },
