@@ -1,62 +1,35 @@
 -- lua/kiyo/utils/lualine-utils.lua
 local M = {}
 
--- Color configuration
+-- Color configuration (Catppuccin Mocha palette)
 M.colors = {
-  rosewater = "#f2d5cf",
-  flamingo = "#eebebe",
-  pink = "#f4b8e4",
-  mauve = "#ca9ee6",
-  red = "#e78284",
-  maroon = "#ea999c",
-  peach = "#ef9f76",
-  yellow = "#e5c890",
-  green = "#a6d189",
-  teal = "#81c8be",
-  sky = "#99d1db",
-  sapphire = "#85c1dc",
-  blue = "#8caaee",
-  lavender = "#babbf1",
-  text = "#c6d0f5",
-  subtext1 = "#b5bfe2",
-  subtext0 = "#a5adce",
-  overlay2 = "#949cbb",
-  overlay1 = "#838ba7",
-  overlay0 = "#737994",
-  surface2 = "#626880",
-  surface1 = "#51576d",
-  surface0 = "#414559",
-  base = "#303446",
-  mantle = "#292c3c",
-  crust = "#232634",
+  rosewater = "#f5e0dc",
+  flamingo = "#f2cdcd",
+  pink = "#f5c2e7",
+  mauve = "#cba6f7",
+  red = "#f38ba8",
+  maroon = "#eba0ac",
+  peach = "#fab387",
+  yellow = "#f9e2af",
+  green = "#a6e3a1",
+  teal = "#94e2d5",
+  sky = "#89dceb",
+  sapphire = "#74c7ec",
+  blue = "#89b4fa",
+  lavender = "#b4befe",
+  text = "#cdd6f4",
+  subtext1 = "#bac2de",
+  subtext0 = "#a6adc8",
+  overlay2 = "#9399b2",
+  overlay1 = "#7f849c",
+  overlay0 = "#6c7086",
+  surface2 = "#585b70",
+  surface1 = "#45475a",
+  surface0 = "#313244",
+  base = "#1e1e2e",
+  mantle = "#181825",
+  crust = "#11111b",
 }
-
--- Get mode color
-function M.get_mode_color()
-  local mode_color = {
-    n = M.colors.blue,
-    i = M.colors.green,
-    v = M.colors.mauve,
-    [""] = M.colors.red,
-    V = M.colors.yellow,
-    c = M.colors.peach,
-    no = M.colors.blue,
-    s = M.colors.teal,
-    S = M.colors.teal,
-    [""] = M.colors.teal,
-    ic = M.colors.green,
-    R = M.colors.red,
-    Rv = M.colors.red,
-    cv = M.colors.peach,
-    ce = M.colors.peach,
-    r = M.colors.red,
-    rm = M.colors.sky,
-    ["r?"] = M.colors.sky,
-    ["!"] = M.colors.flamingo,
-    t = M.colors.lavender,
-  }
-  return { fg = mode_color[vim.fn.mode()] or M.colors.text, bg = "none", gui = "bold" }
-end
 
 -- Separator component
 function M.separator()
@@ -64,7 +37,7 @@ function M.separator()
     function()
       return "│"
     end,
-    color = { fg = M.colors.surface0, bg = "NONE", gui = "bold" },
+    color = { fg = M.colors.overlay0, bg = "NONE" },
     padding = { left = 1, right = 1 },
   }
 end
@@ -76,7 +49,8 @@ function M.root_dir()
       local cwd = vim.fn.getcwd()
       return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
     end,
-    color = { fg = "#16bc40" },
+    color = { fg = M.colors.green, bg = "NONE", gui = "bold" },
+    padding = { left = 1, right = 1 },
   }
 end
 
@@ -95,7 +69,7 @@ function M.pretty_path()
 
     local parts = vim.split(path, "[\\/]")
     if #parts > 3 then
-      parts = { parts[1], "…", unpack(parts, #parts - 2, #parts) }
+      parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
     end
 
     return table.concat(parts, "/")
@@ -105,13 +79,16 @@ end
 -- Macro recording component
 function M.macro_recording()
   local recording_register = vim.fn.reg_recording()
-  return recording_register ~= "" and ("Recording @" .. recording_register) or ""
+  return recording_register ~= "" and ("󰑊 Recording @" .. recording_register) or ""
 end
 
 -- Lazy updates component
 function M.lazy_updates()
   local ok, lazy_status = pcall(require, "lazy.status")
-  return ok and lazy_status.updates() or ""
+  if ok and lazy_status.has_updates() then
+    return "" .. lazy_status.updates()
+  end
+  return ""
 end
 
 -- Check if lazy has updates
@@ -226,49 +203,60 @@ function M.build_lsp_status()
 
   -- LSP Clients
   if #lsp_clients > 0 then
-    table.insert(parts, "%#LualineLspColor#󰒋 " .. table.concat(lsp_clients, ", "))
+    local lsp_str = " 󰒋 " .. table.concat(lsp_clients, ", ")
+    table.insert(parts, lsp_str)
   end
 
   -- Formatters
   if #formatters > 0 then
-    table.insert(parts, "%#LualineFormatterColor#󰉿 " .. table.concat(formatters, ", "))
+    local formatter_str = "󰉿 " .. table.concat(formatters, ", ")
+    table.insert(parts, formatter_str)
   end
 
   -- Linters
   if #linters > 0 then
-    table.insert(parts, "%#LualineLinterColor#󰁨 " .. table.concat(linters, ", "))
+    local linter_str = "󰁨 " .. table.concat(linters, ", ")
+    table.insert(parts, linter_str)
   end
 
   -- Return appropriate message
   if #parts == 0 then
-    return "%#LualineLspColor#󰒋 No servers"
+    return " 󰒋 No servers"
   end
 
-  return table.concat(parts, " ")
+  return table.concat(parts, ", ")
 end
 
--- Diagnostics color function for errors
+-- Component wrapper for LSP status with proper color
+function M.lsp_status_component()
+  return {
+    function()
+      return M.build_lsp_status()
+    end,
+    color = { fg = M.colors.blue, bg = "NONE" },
+    padding = { left = 1, right = 1 },
+  }
+end
+
+-- Diagnostics color functions
 function M.diagnostic_color_error()
   local count = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-  return { fg = (count == 0) and M.colors.green or M.colors.red, bg = "none", gui = "bold" }
+  return { fg = count > 0 and M.colors.red or M.colors.green, bg = "NONE", gui = "bold" }
 end
 
--- Diagnostics color function for warnings
 function M.diagnostic_color_warn()
   local count = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-  return { fg = (count == 0) and M.colors.green or M.colors.yellow, bg = "none", gui = "bold" }
+  return { fg = count > 0 and M.colors.yellow or M.colors.green, bg = "NONE", gui = "bold" }
 end
 
--- Diagnostics color function for info
 function M.diagnostic_color_info()
   local count = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
-  return { fg = (count == 0) and M.colors.green or M.colors.blue, bg = "none", gui = "bold" }
+  return { fg = count > 0 and M.colors.blue or M.colors.green, bg = "NONE", gui = "bold" }
 end
 
--- Diagnostics color function for hints
 function M.diagnostic_color_hint()
   local count = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-  return { fg = (count == 0) and M.colors.green or M.colors.teal, bg = "none", gui = "bold" }
+  return { fg = count > 0 and M.colors.teal or M.colors.green, bg = "NONE", gui = "bold" }
 end
 
 -- Setup highlight groups
@@ -282,9 +270,19 @@ end
 function M.configure_theme(theme)
   local modes = { "normal", "insert", "visual", "replace", "command", "inactive", "terminal" }
   for _, mode in ipairs(modes) do
-    if theme[mode] and theme[mode].c then
-      theme[mode].c.bg = "NONE"
+    if theme[mode] then
+      if theme[mode].a then
+        theme[mode].a.bg = M.colors.surface0
+      end
+      if theme[mode].b then
+        theme[mode].b.bg = "NONE"
+      end
+      if theme[mode].c then
+        theme[mode].c.bg = "NONE"
+      end
     end
   end
   return theme
 end
+
+return M

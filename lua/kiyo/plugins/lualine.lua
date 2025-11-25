@@ -25,8 +25,32 @@ return {
       lualine_a = {
         {
           "mode",
-          icon = "  ",
-          color = utils.get_mode_color,
+          icon = "  ",
+          color = function()
+            local mode_color = {
+              n = utils.colors.blue,
+              i = utils.colors.green,
+              v = utils.colors.mauve,
+              [""] = utils.colors.red,
+              V = utils.colors.yellow,
+              c = utils.colors.peach,
+              no = utils.colors.blue,
+              s = utils.colors.teal,
+              S = utils.colors.teal,
+              [""] = utils.colors.teal,
+              ic = utils.colors.green,
+              R = utils.colors.red,
+              Rv = utils.colors.red,
+              cv = utils.colors.peach,
+              ce = utils.colors.peach,
+              r = utils.colors.red,
+              rm = utils.colors.sky,
+              ["r?"] = utils.colors.sky,
+              ["!"] = utils.colors.flamingo,
+              t = utils.colors.lavender,
+            }
+            return { fg = mode_color[vim.fn.mode()] or utils.colors.text, bg = "none", gui = "bold" }
+          end,
           padding = { left = 0, right = 0 },
         },
       },
@@ -89,9 +113,9 @@ return {
           "fileformat",
           color = { fg = utils.colors.yellow, bg = "none", gui = "bold" },
           symbols = {
-            unix = "",
-            dos = "",
-            mac = "",
+            unix = "",
+            dos = "",
+            mac = "",
           },
           padding = { left = 0, right = 0 },
         },
@@ -111,7 +135,7 @@ return {
           function()
             return utils.build_lsp_status()
           end,
-          color = { bg = "none" },
+          color = { fg = utils.colors.blue, bg = "none" },
           padding = { left = 0, right = 0 },
         },
       },
@@ -145,12 +169,12 @@ return {
         utils.separator(),
         {
           "progress",
-          color = { fg = utils.colors.red, bg = "none", gui = "bold" },
+          color = { fg = utils.colors.peach, bg = "none", gui = "bold" },
           padding = { left = 0, right = 0 },
         },
         {
           "location",
-          color = { fg = utils.colors.red, bg = "none", gui = "bold" },
+          color = { fg = utils.colors.sky, bg = "none", gui = "bold" },
           padding = { left = 1, right = 0 },
         },
       },
