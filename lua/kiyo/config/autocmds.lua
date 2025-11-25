@@ -23,23 +23,37 @@ autocmd("Filetype", {
 local project_utils = require("kiyo.utils.project-utils")
 project_utils.setup_commands()
 
+-- FIXED: Project detection autocmd with proper error handling
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("project-detection", { clear = true }),
   pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "*.jsonc" },
   once = true,
   callback = function()
-    local project_utils = require("kiyo.utils.project-utils")
-    local dirname = vim.fn.expand("%:p:h")
+    -- Use pcall to safely execute the detection
+    local ok, result = pcall(function()
+      local project_utils = require("kiyo.utils.project-utils")
+      local dirname = vim.fn.expand("%:p:h")
 
-    -- Use the detection functions that work with your smart configs
-    local formatter = project_utils.detect_js_formatter(dirname)
-    local linter = project_utils.detect_js_linter(dirname)
+      -- Use the detection functions that work with your smart configs
+      local formatter = project_utils.detect_js_formatter(dirname)
+      local linter = project_utils.detect_js_linter(dirname)
 
-    vim.notify(
-      string.format("Project detected - Formatter: %s, Linter: %s", formatter, linter),
-      vim.log.levels.INFO,
-      { title = "Project Config" }
-    )
+      return {
+        formatter = formatter,
+        linter = linter,
+        dirname = dirname,
+      }
+    end)
+
+    if ok and result then
+      -- Only show notification in debug mode or if explicitly needed
+      -- Comment out or remove this line if you don't want the notification
+      -- vim.notify(
+      --   string.format("Project detected - Formatter: %s, Linter: %s", result.formatter, result.linter),
+      --   vim.log.levels.INFO,
+      --   { title = "Project Config" }
+      -- )
+    end
   end,
 })
 
