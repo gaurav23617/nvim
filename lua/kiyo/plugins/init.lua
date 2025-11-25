@@ -1,6 +1,7 @@
 return {
   -- ui components
   { "MunifTanjim/nui.nvim", lazy = true },
+  { "folke/neoconf.nvim" },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
