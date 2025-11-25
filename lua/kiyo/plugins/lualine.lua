@@ -1,7 +1,9 @@
+-- lua/kiyo/plugins/lualine.lua
 return {
   "nvim-lualine/lualine.nvim",
   opts = function(_, opts)
     local auto = require("lualine.themes.auto")
+    local lualine_utils = require("kiyo.utils.lualine-utils")
 
     local colors = {
       rosewater = "#f2d5cf",
@@ -32,6 +34,7 @@ return {
       crust = "#232634",
     }
 
+    -- Helper functions
     local function separator()
       return {
         function()
@@ -42,7 +45,6 @@ return {
       }
     end
 
-    -- Function to get the root directory name with a fixed color
     local function root_dir()
       return {
         function()
@@ -53,7 +55,6 @@ return {
       }
     end
 
-    -- Function to format file paths nicely
     local function pretty_path()
       return function()
         local path = vim.fn.expand("%:p")
@@ -75,77 +76,9 @@ return {
       end
     end
 
-    local function getLspName()
-      local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
-      local buf_ft = vim.bo.filetype
-
-      local lsp_clients = {}
-      local linters = {}
-      local formatters = {}
-      local exclude_list = { "null-ls", "copilot", "GitHub Copilot" }
-
-      -- Get LSP clients
-      for _, client in pairs(buf_clients) do
-        local should_exclude = false
-        for _, excluded in ipairs(exclude_list) do
-          if client.name:lower():find(excluded:lower()) then
-            should_exclude = true
-            break
-          end
-        end
-
-        if not should_exclude then
-          table.insert(lsp_clients, client.name)
-        end
-      end
-
-      -- Get configured linters
-      local lint_ok, lint = pcall(require, "lint")
-      if lint_ok and lint.linters_by_ft and lint.linters_by_ft[buf_ft] then
-        local buf_linters = lint.linters_by_ft[buf_ft]
-        if type(buf_linters) == "table" then
-          for _, linter in ipairs(buf_linters) do
-            table.insert(linters, linter)
-          end
-        elseif type(buf_linters) == "string" then
-          table.insert(linters, buf_linters)
-        end
-      end
-
-      -- Get configured formatters
-      local conform_ok, conform = pcall(require, "conform")
-      if conform_ok and conform.formatters_by_ft and conform.formatters_by_ft[buf_ft] then
-        local buf_formatters = conform.formatters_by_ft[buf_ft]
-        if type(buf_formatters) == "table" then
-          for _, formatter in ipairs(buf_formatters) do
-            if type(formatter) == "string" then
-              table.insert(formatters, formatter)
-            end
-          end
-        end
-      end
-
-      -- Build the display string with colors and reduced spacing
-      local parts = {}
-
-      if #lsp_clients > 0 then
-        table.insert(parts, "%#LualineLspColor# " .. table.concat(lsp_clients, ", "))
-      end
-
-      if #formatters > 0 then
-        table.insert(parts, "%#LualineFormatterColor# " .. table.concat(formatters, ", "))
-      end
-
-      if #linters > 0 then
-        table.insert(parts, "%#LualineLinterColor# " .. table.concat(linters, ", "))
-      end
-
-      if #parts == 0 then
-        return "%#LualineLspColor# No servers"
-      end
-
-      -- Join with single space instead of double space
-      return table.concat(parts, " ")
+    local function macro_recording()
+      local recording_register = vim.fn.reg_recording()
+      return recording_register ~= "" and ("Recording @" .. recording_register) or ""
     end
 
     -- Define custom highlight groups
@@ -153,33 +86,27 @@ return {
     vim.api.nvim_set_hl(0, "LualineFormatterColor", { fg = colors.peach, bg = "NONE", bold = true })
     vim.api.nvim_set_hl(0, "LualineLinterColor", { fg = colors.yellow, bg = "NONE", bold = true })
 
-    local lsp = {
+    -- LSP status component using the utility
+    local lsp_status = {
       function()
-        return getLspName()
+        return lualine_utils.build_lsp_status()
       end,
       color = { bg = "none" },
       padding = { left = 0, right = 0 },
     }
 
-    -- Ensure lazy.status exists before calling it
+    -- Lazy updates component
     local lazy_updates = function()
       local ok, lazy_status = pcall(require, "lazy.status")
       return ok and lazy_status.updates() or ""
     end
+
     local lazy_has_updates = function()
       local ok, lazy_status = pcall(require, "lazy.status")
       return ok and lazy_status.has_updates()
     end
 
-    local lazy_status = require("lazy.status")
-    local noice = require("noice")
-
-    -- Function to display macro recording status
-    local function macro_recording()
-      local recording_register = vim.fn.reg_recording()
-      return recording_register ~= "" and ("Recording @" .. recording_register) or ""
-    end
-
+    -- Configure theme to remove backgrounds
     local modes = { "normal", "insert", "visual", "replace", "command", "inactive", "terminal" }
     for _, mode in ipairs(modes) do
       if auto[mode] and auto[mode].c then
@@ -199,31 +126,30 @@ return {
       lualine_a = {
         {
           "mode",
-          icon = "  ",
+          icon = "  ",
           color = function()
             local mode_color = {
-              n = colors.blue, -- normal
-              i = colors.green, -- insert
-              v = colors.mauve, -- visual
-              [""] = colors.red, -- visual block (ctrl-v)
-              V = colors.yellow, -- visual line
-              c = colors.peach, -- command
-              no = colors.blue, -- operator pending
-              s = colors.teal, -- select
-              S = colors.teal, -- select line
-              [""] = colors.teal, -- select block
-              ic = colors.green, -- insert command
-              R = colors.red, -- replace
-              Rv = colors.red, -- virtual replace
-              cv = colors.peach, -- vim ex
-              ce = colors.peach, -- normal ex
-              r = colors.red, -- hit enter prompt
-              rm = colors.sky, -- more prompt
-              ["r?"] = colors.sky, -- confirm query
-              ["!"] = colors.flamingo, -- shell
-              t = colors.lavender, -- terminal
+              n = colors.blue,
+              i = colors.green,
+              v = colors.mauve,
+              [""] = colors.red,
+              V = colors.yellow,
+              c = colors.peach,
+              no = colors.blue,
+              s = colors.teal,
+              S = colors.teal,
+              [""] = colors.teal,
+              ic = colors.green,
+              R = colors.red,
+              Rv = colors.red,
+              cv = colors.peach,
+              ce = colors.peach,
+              r = colors.red,
+              rm = colors.sky,
+              ["r?"] = colors.sky,
+              ["!"] = colors.flamingo,
+              t = colors.lavender,
             }
-
             return { fg = mode_color[vim.fn.mode()] or colors.text, bg = "none", gui = "bold" }
           end,
           padding = { left = 0, right = 0 },
@@ -231,10 +157,7 @@ return {
       },
       lualine_b = {
         separator(),
-        {
-          "branch",
-          color = { bg = "none" },
-        },
+        { "branch", color = { bg = "none" } },
         {
           "diff",
           colored = true,
@@ -244,7 +167,6 @@ return {
             removed = { fg = colors.red, bg = "none", gui = "bold" },
           },
           symbols = { added = "+", modified = "~", removed = "-" },
-          source = nil,
           padding = { left = 1, right = 0 },
         },
       },
@@ -289,9 +211,9 @@ return {
           "fileformat",
           color = { fg = colors.yellow, bg = "none", gui = "bold" },
           symbols = {
-            unix = "",
-            dos = "",
-            mac = "",
+            unix = "",
+            dos = "",
+            mac = "",
           },
           padding = { left = 0, right = 0 },
         },
@@ -307,7 +229,7 @@ return {
           color = { fg = colors.surface0, bg = "NONE", gui = "bold" },
           padding = { left = 0, right = 0 },
         },
-        lsp,
+        lsp_status,
       },
       lualine_y = {
         separator(),

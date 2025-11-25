@@ -186,7 +186,7 @@ return {
         lua = { "stylua" },
 
         -- Nix
-        nix = { "alejandra" },
+        nix = { "nixfmt" },
 
         -- Python
         python = { "isort", "black" },

@@ -26,9 +26,12 @@ project_utils.setup_commands()
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("project-detection", { clear = true }),
   pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "*.jsonc" },
-  once = true, -- Only show once per session
+  once = true,
   callback = function()
+    local project_utils = require("kiyo.utils.project-utils")
     local dirname = vim.fn.expand("%:p:h")
+
+    -- Use the detection functions that work with your smart configs
     local formatter = project_utils.detect_js_formatter(dirname)
     local linter = project_utils.detect_js_linter(dirname)
 

@@ -24,6 +24,7 @@ vim.lsp.enable({
   "nginx_language_server",
   "taplo",
   "yamlls",
+  "nixd",
 })
 
 -- LSP servers are automatically managed by Mason
