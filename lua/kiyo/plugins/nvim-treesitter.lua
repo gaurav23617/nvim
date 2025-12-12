@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    dependencies = { "davidmh/mdx.nvim" },
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     config = function()
@@ -70,13 +71,16 @@ return {
 
       vim.filetype.add({
         extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
-        filename = { ["vifmrc"] = "vim" },
+        filename = {
+          ["vifmrc"] = "vim",
+        },
         pattern = {
           [".*/waybar/config"] = "jsonc",
           [".*/mako/config"] = "dosini",
           [".*/kitty/.+%.conf"] = "kitty",
           [".*/hypr/.+%.conf"] = "hyprlang",
           ["%.env%.[%w_.-]+"] = "sh",
+          [".*/git/config"] = "gitconfig",
         },
       })
 
