@@ -25,6 +25,9 @@ vim.lsp.enable({
   "taplo",
   "yamlls",
   "nixd",
+  "ruff",
+  "python-lsp-server",
+  "mdx-analyzer",
 })
 
 -- LSP servers are automatically managed by Mason

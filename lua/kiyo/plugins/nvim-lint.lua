@@ -180,6 +180,8 @@ return {
 
       -- Go
       go = { "golangcilint" },
+      -- Python
+      python = { "ruff" },
 
       -- Lua
       lua = { "selene" },

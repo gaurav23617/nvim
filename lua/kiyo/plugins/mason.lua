@@ -14,14 +14,18 @@ return {
         "typescript-language-server", -- TypeScript LSP
         "rust-analyzer", -- Rust LSP
         -- "intelephense", -- PHP LSP
+        "python-lsp-server", -- Python LSP
         "tailwindcss-language-server", -- Tailwind CSS LSP
         "html-lsp", -- HTML LSP
         "css-lsp", -- CSS LSP
         "vue-language-server", -- Vue LSP
         "biome",
-        "nil",
-        "alejandra",
         "tflint",
+        "docker-language-server",
+        "dockerfile-language-server",
+        "docker-compose-language-service",
+        "yaml-language-server",
+        "mdx-analyzer",
 
         -- Formatters (for conform.nvim and general use)
         "stylua",
@@ -29,7 +33,7 @@ return {
         "goimports",
         -- Note: gofmt comes with Go installation, not managed by Mason
         "prettier",
-        -- "black",
+        "black",
         -- "isort",
         "blade-formatter",
 
