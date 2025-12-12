@@ -18,6 +18,7 @@ return {
           module = "blink.cmp.sources.lsp",
           min_keyword_length = 2,
           score_offset = 15,
+          max_items = 6,
         },
         copilot = {
           name = "copilot",

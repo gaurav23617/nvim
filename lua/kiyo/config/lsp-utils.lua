@@ -14,7 +14,27 @@ M.default_config = {
   init_options = vim.empty_dict(),
   handlers = {},
   autostart = true,
-  capabilities = lsp.protocol.make_client_capabilities(),
+  autostart = true,
+  capabilities = (function()
+    local caps = lsp.protocol.make_client_capabilities()
+    local ok, blink = pcall(require, "blink.cmp")
+    if ok then
+      caps = blink.get_lsp_capabilities(caps)
+
+      -- Also patch global lspconfig defaults
+      local lsp_ok, lspconfig = pcall(require, "lspconfig")
+      if lsp_ok then
+        lspconfig.util.default_config.capabilities = vim.tbl_deep_extend(
+          "force",
+          lspconfig.util.default_config.capabilities,
+          caps
+        )
+      end
+
+      return caps
+    end
+    return caps
+  end)(),
 }
 
 -- global on_setup hook

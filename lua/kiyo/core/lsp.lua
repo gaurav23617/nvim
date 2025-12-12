@@ -1,34 +1,68 @@
 -- Mason PATH is handled by core.mason-path
-vim.lsp.enable({
-  "lua-ls",
+
+-- Get blink capabilities if available
+local has_blink, blink = pcall(require, "blink.cmp")
+local base_capabilities = vim.lsp.protocol.make_client_capabilities()
+if has_blink then
+  base_capabilities = blink.get_lsp_capabilities(base_capabilities)
+end
+
+-- LSP servers to enable - using modern vim.lsp.config API (Neovim 0.11+)
+local servers = {
+  "lua_ls",
   "gopls",
   "zls",
-  "ts-ls",
-  "rust-analyzer",
+  "ts_ls",
+  "rust_analyzer",
   "intelephense",
   "tailwindcss",
-  "html-ls",
-  "css-ls",
-  "vue-ls",
+  "html",
+  "cssls",
+  "volar",
   "eslint",
-  "blade",
-  "basedpyright",
-  "bashls",
-  "css_variables",
-  "cssmodules_ls",
-  "dockerls",
-  "grammarly",
+  "emmet_language_server",
   "jsonls",
-  "lemminx",
-  "marksman",
-  "nginx_language_server",
-  "taplo",
   "yamlls",
-  "nixd",
-  "ruff",
-  "python-lsp-server",
-  "mdx-analyzer",
-})
+  "dockerls",
+}
+
+-- Function to load server-specific config from lsp/ directory
+local function load_server_config(server_name)
+  -- Try different naming conventions
+  local config_files = {
+    server_name .. ".lua",
+    server_name:gsub("_", "-") .. ".lua",
+    server_name:gsub("_", "_") .. ".lua",
+  }
+
+  for _, filename in ipairs(config_files) do
+    local config_path = vim.fn.stdpath("config") .. "/lsp/" .. filename
+    if vim.fn.filereadable(config_path) == 1 then
+      local ok, config = pcall(dofile, config_path)
+      if ok and config then
+        return config
+      end
+    end
+  end
+
+  return {}
+end
+
+-- Setup each server using modern vim.lsp.config API
+for _, server in ipairs(servers) do
+  -- Load server-specific config from lsp/ directory
+  local server_config = load_server_config(server)
+
+  -- Merge with blink capabilities
+  local config = vim.tbl_deep_extend("force", server_config, {
+    capabilities = base_capabilities,
+  })
+
+  vim.lsp.config(server, config)
+end
+
+-- Enable all configured servers
+vim.lsp.enable(servers)
 
 -- LSP servers are automatically managed by Mason
 -- Use :MasonVerify to check which tools are Mason-managed
