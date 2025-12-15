@@ -18,7 +18,7 @@ local servers = {
   "tailwindcss",
   "html",
   "cssls",
-  "volar",
+  "vue_ls",
   "eslint",
   "emmet_language_server",
   "jsonls",
