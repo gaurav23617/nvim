@@ -13,24 +13,23 @@ return {
   ---@module 'obsidian'
   ---@type obsidian.config
   opts = {
-    config = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/personal/obsidian/brain-log",
-        },
-        {
-          name = "projects",
-          path = "~/personal/projects",
-        },
-        {
-          name = "playground",
-          path = "~/personal/playground",
-        },
-        {
-          name = "workspace",
-          path = "~/workspace",
-        },
+    legacy_commands = false,
+    workspaces = {
+      {
+        name = "personal",
+        path = "~/personal/obsidian/brain-log",
+      },
+      {
+        name = "projects",
+        path = "~/personal/projects",
+      },
+      {
+        name = "playground",
+        path = "~/personal/playground",
+      },
+      {
+        name = "workspace",
+        path = "~/workspace",
       },
     },
   },
