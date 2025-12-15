@@ -55,7 +55,12 @@ return {
         Snacks.toggle.dim():map("<leader>uD")
       end,
     })
-    vim.ui.input = require("snacks.input")
-    vim.ui.select = require("snacks.picker").select
+    vim.ui.input = function(opts, on_confirm)
+      Snacks.input(opts, on_confirm)
+    end
+
+    vim.ui.select = function(items, opts, on_ensure)
+      Snacks.picker.select(items, opts, on_ensure)
+    end
   end,
 }

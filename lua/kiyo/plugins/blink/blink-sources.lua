@@ -16,9 +16,10 @@ return {
         lsp = {
           name = "LSP",
           module = "blink.cmp.sources.lsp",
-          min_keyword_length = 2,
-          score_offset = 15,
-          max_items = 6,
+          min_keyword_length = 1, -- Trigger after 1 char (balanced - not too aggressive)
+          score_offset = 90, -- High priority (just below copilot at 100)
+          max_items = 15, -- Show more LSP suggestions
+          fallbacks = { "buffer" }, -- Fallback to buffer if no LSP results
         },
         copilot = {
           name = "copilot",
