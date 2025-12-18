@@ -1,51 +1,80 @@
 return {
-  -- Mason: LSP server installer and manager
-  {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup({
-        ui = {
-          icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-          }
-        }
-      })
-    end
-  },
+	"mason-org/mason.nvim",
+	dependencies = {
+		"mason-org/mason-lspconfig.nvim",
+		"mason-org/mason-registry",
+	},
+	cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
+	keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+	build = ":MasonUpdate",
+	opts = {
+		ensure_installed = {
+			-- LSP servers (matching your vim.lsp.enable() config)
+			"lua-language-server", -- Lua LSP
+			"gopls", -- Go LSP
+			"zls", -- Zig LSP
+			"typescript-language-server", -- TypeScript LSP
+			"rust-analyzer", -- Rust LSP
+			-- "intelephense", -- PHP LSP
+			"python-lsp-server", -- Python LSP
+			"tailwindcss-language-server", -- Tailwind CSS LSP
+			"html-lsp", -- HTML LSP
+			"css-lsp", -- CSS LSP
+			"vue-language-server", -- Vue LSP
+			"biome",
+			"tflint",
+			"docker-language-server",
+			"dockerfile-language-server",
+			"docker-compose-language-service",
+			"yaml-language-server",
+			"mdx-analyzer",
 
-  -- Mason-lspconfig: Bridge between mason and lspconfig
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-lspconfig").setup({
-        -- Auto-install these LSP servers
-        ensure_installed = {
-          -- Web Development
-          "ts_ls",           -- TypeScript/JavaScript
-          "html",            -- HTML
-          "cssls",           -- CSS
-          "tailwindcss",     -- TailwindCSS
-          "emmet_language_server", -- Emmet
+			-- Formatters (for conform.nvim and general use)
+			"stylua",
+			"selene",
+			"goimports",
+			-- Note: gofmt comes with Go installation, not managed by Mason
+			"prettier",
+			"black",
+			-- "isort",
+			"blade-formatter",
 
-          -- Backend
-          "lua_ls",          -- Lua
-          "pyright",         -- Python
-          "gopls",           -- Go
-          "rust_analyzer",   -- Rust
+			-- Linters and diagnostics
+			"golangci-lint",
+			"eslint_d",
+			"luacheck", -- Lua linting
+			-- "pint", -- Laravel Pint for PHP (formatting & linting)
 
-          -- Add more servers as needed:
-          -- "jsonls",       -- JSON
-          -- "yamlls",       -- YAML
-          -- "dockerls",     -- Docker
-          -- "bashls",       -- Bash
-        },
+			-- Additional useful tools
+			"delve", -- Go debugger
+			"shfmt", -- Shell formatter
+			"shellcheck", -- Shell linter
 
-        -- Auto-install servers configured in lsp.lua
-        automatic_installation = true,
-      })
-    end
-  }
+			"emmet-language-server",
+			"emmet-ls",
+		},
+	},
+	config = function(_, opts)
+		require("mason").setup(opts)
+
+		-- Simplified auto-install without Nix-managed tools
+		local mr = require("mason-registry")
+		local function ensure_installed()
+			for _, tool in ipairs(opts.ensure_installed) do
+				if mr.has_package(tool) then
+					local p = mr.get_package(tool)
+					if not p:is_installed() then
+						vim.notify("Mason: Installing " .. tool .. "...", vim.log.levels.INFO)
+						p:install()
+					end
+				end
+			end
+		end
+
+		if mr.refresh then
+			mr.refresh(ensure_installed)
+		else
+			ensure_installed()
+		end
+	end,
 }
