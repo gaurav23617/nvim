@@ -1,25 +1,36 @@
--- LSP Configuration for Neovim 0.11+
--- Using native vim.lsp.enable without extensive vim.lsp.config
--- Inspired by: https://github.com/smnatale/nvim
-
 return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
       "saghen/blink.cmp", -- For LSP capabilities (auto-detected in 0.11)
     },
     config = function()
-      -- ========================================
       -- Diagnostic Configuration
-      -- ========================================
       vim.diagnostic.config({
         -- Show inline error messages (disabled by default in 0.11)
         virtual_text = true,
 
         -- Show diagnostic signs in the sign column
-        signs = true,
+		signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "󰅚 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.INFO] = "󰋽 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    },
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+      [vim.diagnostic.severity.WARN] = "WarningMsg",
+    },
+			linehl = {
+				[vim.diagnostic.severity.ERROR] = "Error",
+				[vim.diagnostic.severity.WARN] = "Warn",
+				[vim.diagnostic.severity.INFO] = "Info",
+				[vim.diagnostic.severity.HINT] = "Hint",
+			},
+		},
 
         -- Update diagnostics while typing
         update_in_insert = false,
@@ -39,46 +50,30 @@ return {
         },
       })
 
-      -- ========================================
-      -- Diagnostic Signs
-      -- ========================================
-      local signs = {
-        { name = "DiagnosticSignError", text = "" },
-        { name = "DiagnosticSignWarn", text = "" },
-        { name = "DiagnosticSignHint", text = "" },
-        { name = "DiagnosticSignInfo", text = "" },
-      }
-
-      for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-      end
-
-      -- ========================================
       -- Enable LSP Servers
-      -- ========================================
-      -- Simply enable the servers - Neovim 0.11 handles the rest!
-      -- Server configs come from nvim-lspconfig defaults
       vim.lsp.enable({
-        -- Web Development
         "ts_ls",                -- TypeScript/JavaScript
         "html",                 -- HTML
         "cssls",                -- CSS
+	"biome",
         "tailwindcss",          -- TailwindCSS
         "emmet_language_server", -- Emmet
         "eslint",               -- ESLint
-
-        -- Backend
         "lua_ls",               -- Lua
         "pyright",              -- Python
         "gopls",                -- Go
         "rust_analyzer",        -- Rust
-
-        -- Add more as needed
+  "zls",
+  "intelephense",
+  "tailwindcss",
+  "vue_ls",
+  "jsonls",
+  "yamlls",
+  "dockerls",
+  "docker_compose_language_service",
       })
 
-      -- ========================================
       -- LSP Attach Configuration
-      -- ========================================
       -- Customize behavior when LSP attaches to a buffer
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -88,9 +83,7 @@ return {
           -- Get the client for this buffer
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
-          -- ========================================
           -- Keybindings
-          -- ========================================
           -- Note: Many of these are already default in Neovim 0.11
           -- but we define them here for customization
 
@@ -138,16 +131,12 @@ return {
           vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
           vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-          -- ========================================
           -- Inlay Hints (if supported)
-          -- ========================================
           if client and client.server_capabilities.inlayHintProvider then
             vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
           end
 
-          -- ========================================
           -- Document Highlight (if supported)
-          -- ========================================
           -- Highlight symbol under cursor
           if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup("LspDocumentHighlight", {})
@@ -165,9 +154,7 @@ return {
         end,
       })
 
-      -- ========================================
       -- Handlers Configuration
-      -- ========================================
       -- Customize LSP floating windows
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
         vim.lsp.handlers.hover,
