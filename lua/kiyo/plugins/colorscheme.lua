@@ -34,7 +34,12 @@ return {
           warnings = { "undercurl" },
           information = { "undercurl" },
         },
-        virtual_text = {errors = "italic", hints = "italic", warnings = "italic", information = "italic"},
+        virtual_text = {
+          errors = "italic",
+          hints = "italic",
+          warnings = "italic",
+          information = "italic",
+        },
       },
       navic = { enabled = true, custom_bg = "lualine" },
       neotest = true,

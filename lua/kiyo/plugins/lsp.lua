@@ -13,24 +13,24 @@ return {
         virtual_text = true,
 
         -- Show diagnostic signs in the sign column
-		signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.INFO] = "󰋽 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
-    },
-    numhl = {
-      [vim.diagnostic.severity.ERROR] = "ErrorMsg",
-      [vim.diagnostic.severity.WARN] = "WarningMsg",
-    },
-			linehl = {
-				[vim.diagnostic.severity.ERROR] = "Error",
-				[vim.diagnostic.severity.WARN] = "Warn",
-				[vim.diagnostic.severity.INFO] = "Info",
-				[vim.diagnostic.severity.HINT] = "Hint",
-			},
-		},
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰋽 ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+          },
+          numhl = {
+            [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+            [vim.diagnostic.severity.WARN] = "WarningMsg",
+          },
+          linehl = {
+            [vim.diagnostic.severity.ERROR] = "Error",
+            [vim.diagnostic.severity.WARN] = "Warn",
+            [vim.diagnostic.severity.INFO] = "Info",
+            [vim.diagnostic.severity.HINT] = "Hint",
+          },
+        },
 
         -- Update diagnostics while typing
         update_in_insert = false,
@@ -52,25 +52,25 @@ return {
 
       -- Enable LSP Servers
       vim.lsp.enable({
-        "ts_ls",                -- TypeScript/JavaScript
-        "html",                 -- HTML
-        "cssls",                -- CSS
-	"biome",
-        "tailwindcss",          -- TailwindCSS
+        "ts_ls", -- TypeScript/JavaScript
+        "html", -- HTML
+        "cssls", -- CSS
+        "biome",
+        "tailwindcss", -- TailwindCSS
         "emmet_language_server", -- Emmet
-        "eslint",               -- ESLint
-        "lua_ls",               -- Lua
-        "pyright",              -- Python
-        "gopls",                -- Go
-        "rust_analyzer",        -- Rust
-  "zls",
-  "intelephense",
-  "tailwindcss",
-  "vue_ls",
-  "jsonls",
-  "yamlls",
-  "dockerls",
-  "docker_compose_language_service",
+        "eslint", -- ESLint
+        "lua_ls", -- Lua
+        "pyright", -- Python
+        "gopls", -- Go
+        "rust_analyzer", -- Rust
+        "zls",
+        "intelephense",
+        "tailwindcss",
+        "vue_ls",
+        "jsonls",
+        "yamlls",
+        "dockerls",
+        "docker_compose_language_service",
       })
 
       -- LSP Attach Configuration
@@ -156,15 +156,11 @@ return {
 
       -- Handlers Configuration
       -- Customize LSP floating windows
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = "rounded" }
-      )
+      vim.lsp.handlers["textDocument/hover"] =
+        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = "rounded" }
-      )
-    end
-  }
+      vim.lsp.handlers["textDocument/signatureHelp"] =
+        vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+    end,
+  },
 }
