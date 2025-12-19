@@ -33,10 +33,7 @@ return {
       "stylua",
       "selene",
       "goimports",
-      -- Note: gofmt comes with Go installation, not managed by Mason
       "prettier",
-      "black",
-      -- "isort",
       "blade-formatter",
 
       -- Linters and diagnostics
