@@ -116,11 +116,6 @@ return {
           -- Code action
           vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
-          -- Format buffer
-          vim.keymap.set("n", "<leader>f", function()
-            vim.lsp.buf.format({ async = true })
-          end, opts)
-
           -- Show diagnostics in floating window
           vim.keymap.set("n", "<leader>d", function()
             vim.diagnostic.open_float({
@@ -131,11 +126,6 @@ return {
           -- Go to next/previous diagnostic
           vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
           vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-
-          -- Inlay Hints (if supported)
-          if client and client.server_capabilities.inlayHintProvider then
-            vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
-          end
 
           -- Document Highlight (if supported)
           -- Highlight symbol under cursor
