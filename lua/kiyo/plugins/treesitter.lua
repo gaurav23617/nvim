@@ -5,6 +5,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     branch = "main",
+    opts_extend = { "ensure_installed" },
     opts = {
       -- ensure these languages parsers are installed
       ensure_installed = {
@@ -13,6 +14,7 @@ return {
         "javascript",
         "typescript",
         "tsx",
+        "jsx",
         "go",
         "yaml",
         "html",
@@ -45,6 +47,14 @@ return {
         "git_config",
         "hyprlang",
       },
+      -- Enable syntax highlighting
+      highlight = {
+        enable = true,
+      },
+      -- Enable indentation
+      indent = {
+        enable = true,
+      },
       incremental_selection = {
         enable = true,
         keymaps = {
@@ -53,7 +63,6 @@ return {
           scope_incremental = false,
         },
       },
-      additional_vim_regex_highlighting = false,
     },
     config = function(_, treesitter)
       local function add(lang)
