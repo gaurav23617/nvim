@@ -64,6 +64,7 @@ return {
         "gopls", -- Go
         "rust_analyzer", -- Rust
         "zls",
+        "nixd",
         "intelephense",
         "tailwindcss",
         "vue_ls",
