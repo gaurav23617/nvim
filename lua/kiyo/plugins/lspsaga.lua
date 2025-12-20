@@ -35,24 +35,11 @@ return {
     },
   },
   keys = {
-    { "n", "gd", "<cmd>Lspsaga goto_definition<CR>" },
-    { "n", "<leader>ln", "<cmd>Lspsaga rename ++project<CR>" },
-    { "n", "t", "<cmd>Lspsaga term_toggle" },
-    {
-      "m",
-      "<Plug>(lsp)",
-    },
-    {
-      "n",
-      "K",
-      "<cmd>Lspsaga hover_doc<cr>",
-      desc = "Show hover documentation",
-    },
-    {
-      "<Plug>(lsp)a",
-      "<cmd>Lspsaga code_action<cr>",
-      desc = "Code action",
-    },
+    { "gd", "<cmd>Lspsaga goto_definition<CR>", desc = "Go to definition" },
+    { "<leader>ln", "<cmd>Lspsaga rename ++project<CR>", desc = "Rename (project-wide)" },
+    { "t", "<cmd>Lspsaga term_toggle<CR>", desc = "Toggle terminal" },
+    { "K", "<cmd>Lspsaga hover_doc<cr>", desc = "Show hover documentation" },
+    { "<Plug>(lsp)a", "<cmd>Lspsaga code_action<cr>", desc = "Code action" },
     {
       "<Plug>(lsp)d",
       "<cmd>Lspsaga show_cursor_diagnostics<cr>",
@@ -63,20 +50,8 @@ return {
       "<cmd>Lspsaga show_workspace_diagnostics<cr>",
       desc = "Show diagnostics in workspace",
     },
-    {
-      ";e",
-      "<cmd>Lspsaga diagnostic_jump_next<cr>",
-      desc = "Jump to next diagnostic",
-    },
-    {
-      ";E",
-      "<cmd>Lspsaga diagnostic_jump_prev<cr>",
-      desc = "Jump to previous diagnostic",
-    },
-    {
-      "<Plug>(lsp)rn",
-      "<cmd>Lspsaga rename<cr>",
-      desc = "Rename",
-    },
+    { ";e", "<cmd>Lspsaga diagnostic_jump_next<cr>", desc = "Jump to next diagnostic" },
+    { ";E", "<cmd>Lspsaga diagnostic_jump_prev<cr>", desc = "Jump to previous diagnostic" },
+    { "<Plug>(lsp)rn", "<cmd>Lspsaga rename<cr>", desc = "Rename" },
   },
 }
