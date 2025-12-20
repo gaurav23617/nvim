@@ -47,6 +47,10 @@ return {
         "git_config",
         "hyprlang",
       },
+      -- Install parsers synchronously (only applied to `ensure_installed`)
+      sync_install = false,
+      -- Automatically install missing parsers when entering buffer
+      auto_install = true,
       -- Enable syntax highlighting
       highlight = {
         enable = true,
@@ -64,12 +68,21 @@ return {
         },
       },
     },
-    config = function(_, treesitter)
-      local function add(lang)
-        -- Use the 'treesitter' table passed to config, which is the final opts table
-        local parsers = treesitter.ensure_installed or {}
-        if type(parsers) == "table" then
-          table.insert(parsers, lang)
+    config = function(_, opts)
+      -- install parsers from custom opts.ensure_installed
+      if opts.ensure_installed and #opts.ensure_installed > 0 then
+        require("nvim-treesitter").install(opts.ensure_installed)
+        -- register and start parsers for filetypes
+        for _, parser in ipairs(opts.ensure_installed) do
+          local filetypes = parser -- In this case, parser is the filetype/language name
+          vim.treesitter.language.register(parser, filetypes)
+
+          vim.api.nvim_create_autocmd({ "FileType" }, {
+            pattern = filetypes,
+            callback = function(event)
+              vim.treesitter.start(event.buf, parser)
+            end,
+          })
         end
       end
 
@@ -101,6 +114,7 @@ return {
       if vim.fn.executable("rofi") == 1 or vim.fn.executable("wofi") == 1 then
         add("rasi")
       end
+      -- require("nvim-treesitter").setup(opts)
     end,
   },
   -- NOTE: js,ts,jsx,tsx Auto Close Tags
@@ -122,7 +136,7 @@ return {
         opts = {
           enable_close = true, -- Auto-close tags
           enable_rename = true, -- Auto-rename pairs
-          enable_close_on_slash = false, -- Disable auto-close on trailing `</`
+          -- enable_close_on_slash = false, -- Disable auto-close on trailing `</`
         },
         per_filetype = {
           ["html"] = {
