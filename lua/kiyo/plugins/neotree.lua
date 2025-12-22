@@ -76,6 +76,19 @@ return {
           desc = "Open with System Application",
         },
         ["P"] = { "toggle_preview", config = { use_float = false } },
+        ["a"] = {
+          "add",
+          config = {
+            show_path = "relative", -- "none" (default), "relative", "absolute"
+          },
+        },
+        ["A"] = {
+          "add_directory",
+          config = {
+            show_path = "relative", -- "none" (default), "relative", "absolute"
+          },
+        },
+        ["R"] = "refresh",
       },
     },
     default_component_configs = {
