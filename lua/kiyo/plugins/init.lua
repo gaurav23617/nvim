@@ -1,7 +1,6 @@
 return {
   -- ui components
   { "MunifTanjim/nui.nvim", lazy = true },
-  { "folke/neoconf.nvim" },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -61,17 +60,6 @@ return {
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
-
-  {
-    "folke/lazydev.nvim",
-    ft = "lua",
-    opts = {
-      library = {
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
-  },
-  { "folke/neoconf.nvim" },
   {
     "mbbill/undotree",
     event = { "BufReadPre", "BufNewFile" },
@@ -101,9 +89,9 @@ return {
   {
     "editorconfig/editorconfig-vim",
   },
-  {
-    "smjonas/inc-rename.nvim",
-    cmd = "IncRename",
-    opts = {},
-  },
+  -- {
+  --   "smjonas/inc-rename.nvim",
+  --   cmd = "IncRename",
+  --   opts = {},
+  -- },
 }
