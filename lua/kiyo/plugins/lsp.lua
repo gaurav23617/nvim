@@ -68,6 +68,8 @@ return {
       "yamlls",
       "dockerls",
       "docker_compose_language_service",
+      "terraformls",
+      "tofu_ls",
     })
 
     -- LSP Attach Configuration

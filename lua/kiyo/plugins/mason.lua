@@ -22,12 +22,13 @@ return {
       "css-lsp", -- CSS LSP
       "vue-language-server", -- Vue LSP
       "biome",
-      "tflint",
       "docker-language-server",
       "dockerfile-language-server",
       "docker-compose-language-service",
       "yaml-language-server",
       "mdx-analyzer",
+      "terraform",
+      "tofu-ls",
 
       -- Formatters (for conform.nvim and general use)
       "stylua",
@@ -40,6 +41,7 @@ return {
       "golangci-lint",
       "eslint_d",
       "luacheck", -- Lua linting
+      "tflint",
       -- "pint", -- Laravel Pint for PHP (formatting & linting)
 
       -- Additional useful tools
